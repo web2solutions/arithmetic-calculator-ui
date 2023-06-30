@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
 import { getSession } from './session';
 
-const baseUrl = `${import.meta.env.VITE_API_URL}/records`;
-
 const session = getSession();
 
 export const useRecordsStore = defineStore({

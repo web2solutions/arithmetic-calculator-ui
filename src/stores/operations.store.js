@@ -1,16 +1,5 @@
 import { defineStore } from 'pinia';
-import { useRoute } from 'vue-router';
 import { getSession } from './session';
-import { fetchWrapper } from '@/helpers';
-import { useAuthStore } from '@/stores';
-
-
-// const route = useRoute();
-// const id = route.params.id;
-// const query = route.query || {};
-// let { page = 1, size = 20 } = query;
-
-const baseUrl = `${import.meta.env.VITE_API_URL}/operations`;
 
 const session = getSession();
 
