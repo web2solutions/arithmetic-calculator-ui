@@ -33,15 +33,8 @@ export const useRecordsStore = defineStore({
                     code,
                     message
                 } = await session.post(`records`, record);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 201 || code === 0) && data) {
                     this.users.push(data);
-                    console.log(this.record, data)
-                    // this.record = data;
                 } else {
                     throw new Error(message);
                 }
@@ -52,16 +45,8 @@ export const useRecordsStore = defineStore({
             }
         },
         async getAll() {
-            // const route = useRoute();
-            // const query = route.query || {};
-            // console.log('????? query', query)
             const page = this.page;
             const size = this.pageSize
-            // const route = useRoute();
-            // const id = route.params.id;
-            // const query = route.query || {};
-            // console.info('xxxxx>>>>>>', query)
-            // let { page = 1, size = 20 } = query;
             this.records = { loading: true };
             try {
                 const {
@@ -69,11 +54,6 @@ export const useRecordsStore = defineStore({
                     code,
                     message
                 } = await session.get('records', { page, size });
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
                     const { result, page, size, total } = data;
                     this.page = +page;
@@ -94,7 +74,6 @@ export const useRecordsStore = defineStore({
             }
         },
         async getById(id) {
-            console.log('XXXXX GET BY ID', id)
             this.record = { loading: true };
             try {
                 const {
@@ -102,13 +81,7 @@ export const useRecordsStore = defineStore({
                     code,
                     message
                 } = await session.get(`records/${id}`);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
-                    console.log(this.record, data)
                     this.record = data;
                 } else {
                     throw new Error(message);
@@ -129,13 +102,7 @@ export const useRecordsStore = defineStore({
                     code,
                     message
                 } = await session.put(`records/${id}`, params);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
-                    console.log(this.record, data)
                     if(params.status === 'active') {
                         this.records.find(x => x.id === id).status = 'active';
                         this.records.find(x => x.id === id).isRestoring = false;
@@ -155,9 +122,6 @@ export const useRecordsStore = defineStore({
             }
         },
         async delete(id) {
-            // add isDeleting prop to record being deleted
-            
-
             try {
                 this.records.find(x => x.id === id).isDeleting = true;
                 const {
@@ -165,11 +129,6 @@ export const useRecordsStore = defineStore({
                     code,
                     message
                 } = await session.delete(`records/${id}`);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
                     // remove record from list after deleted
                     this.records.find(x => x.id === id).status = 'inactive';

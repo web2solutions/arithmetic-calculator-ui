@@ -34,14 +34,8 @@ export const useUsersStore = defineStore({
                     code,
                     message
                 } = await session.post(`users`, user);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 201 || code === 0) && data) {
-                    console.log(this.user, data)
-                    // this.user = data;
+                    // 
                 } else {
                     throw new Error(message);
                 }
@@ -51,16 +45,8 @@ export const useUsersStore = defineStore({
             }
         },
         async getAll() {
-            // const route = useRoute();
-            // const query = route.query || {};
-            // console.log('????? query', query)
             const page = this.page;
             const size = this.pageSize
-            // const route = useRoute();
-            // const id = route.params.id;
-            // const query = route.query || {};
-            // console.info('xxxxx>>>>>>', query)
-            // let { page = 1, size = 20 } = query;
             this.users = { loading: true };
             try {
                 const {
@@ -68,11 +54,6 @@ export const useUsersStore = defineStore({
                     code,
                     message
                 } = await session.get('users', { page, size });
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
                     const { result, page, size, total } = data;
                     this.page = +page;
@@ -93,7 +74,6 @@ export const useUsersStore = defineStore({
             }
         },
         async getById(id) {
-            console.log('XXXXX GET BY ID', id)
             this.user = { loading: true };
             try {
                 const {
@@ -101,13 +81,7 @@ export const useUsersStore = defineStore({
                     code,
                     message
                 } = await session.get(`users/${id}`);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
-                    console.log(this.user, data)
                     this.user = data;
                 } else {
                     throw new Error(message);
@@ -128,13 +102,7 @@ export const useUsersStore = defineStore({
                     code,
                     message
                 } = await session.put(`users/${id}`, params);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
-                    console.log(this.user, data)
                     if(params.status === 'active') {
                         this.users.find(x => x.id === id).status = 'active';
                         this.users.find(x => x.id === id).isRestoring = false;
@@ -165,8 +133,6 @@ export const useUsersStore = defineStore({
         },
         async delete(id) {
             // add isDeleting prop to user being deleted
-            
-
             try {
                 this.users.find(x => x.id === id).isDeleting = true;
                 const {
@@ -174,11 +140,6 @@ export const useUsersStore = defineStore({
                     code,
                     message
                 } = await session.delete(`users/${id}`);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
                     // remove user from list after deleted
                     this.users.find(x => x.id === id).status = 'inactive';

@@ -33,15 +33,8 @@ export const useOperationsStore = defineStore({
                     code,
                     message
                 } = await session.post(`operations`, operation);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 201 || code === 0) && data) {
                     this.users.push(data);
-                    console.log(this.operation, data)
-                    // this.operation = data;
                 } else {
                     throw new Error(message);
                 }
@@ -52,16 +45,8 @@ export const useOperationsStore = defineStore({
             }
         },
         async getAll() {
-            // const route = useRoute();
-            // const query = route.query || {};
-            // console.log('????? query', query)
             const page = this.page;
             const size = this.pageSize
-            // const route = useRoute();
-            // const id = route.params.id;
-            // const query = route.query || {};
-            // console.info('xxxxx>>>>>>', query)
-            // let { page = 1, size = 20 } = query;
             this.operations = { loading: true };
             try {
                 const {
@@ -69,11 +54,6 @@ export const useOperationsStore = defineStore({
                     code,
                     message
                 } = await session.get('operations', { page, size });
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
                     const { result, page, size, total } = data;
                     this.page = +page;
@@ -94,7 +74,6 @@ export const useOperationsStore = defineStore({
             }
         },
         async getById(id) {
-            console.log('XXXXX GET BY ID', id)
             this.operation = { loading: true };
             try {
                 const {
@@ -102,13 +81,7 @@ export const useOperationsStore = defineStore({
                     code,
                     message
                 } = await session.get(`operations/${id}`);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
-                    console.log(this.operation, data)
                     this.operation = data;
                 } else {
                     throw new Error(message);
@@ -129,13 +102,7 @@ export const useOperationsStore = defineStore({
                     code,
                     message
                 } = await session.put(`operations/${id}`, params);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
-                    console.log(this.operation, data)
                     if(params.status === 'active') {
                         this.operations.find(x => x.id === id).status = 'active';
                         this.operations.find(x => x.id === id).isRestoring = false;
@@ -155,9 +122,6 @@ export const useOperationsStore = defineStore({
             }
         },
         async delete(id) {
-            // add isDeleting prop to operation being deleted
-            
-
             try {
                 this.operations.find(x => x.id === id).isDeleting = true;
                 const {
@@ -165,11 +129,6 @@ export const useOperationsStore = defineStore({
                     code,
                     message
                 } = await session.delete(`operations/${id}`);
-                console.log({
-                    data,
-                    code,
-                    message
-                })
                 if ((code === 200 || code === 0) && data) {
                     // remove operation from list after deleted
                     this.operations.find(x => x.id === id).status = 'inactive';
