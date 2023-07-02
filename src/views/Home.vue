@@ -11,9 +11,13 @@ const { user } = storeToRefs(authStore);
     <div v-if="user">
         <h1>Hi {{user.username}}!</h1>
         <p>You're logged as {{user.admin ? 'admin' : 'user'}}.</p>
-        <p><router-link v-if="user.admin" to="/create_operation">New operation</router-link></p>
         <p><router-link v-if="user.admin" to="/users">Manage Users</router-link></p>
-        <p><router-link v-if="user.admin" to="/users">Manage Operarions</router-link></p>
-        <p><router-link v-if="user.admin" to="/users">Manage Records</router-link></p>
+        <p><router-link v-if="user.admin" to="/operations">Manage Operations</router-link></p>
+        <p><router-link to="/records">See all my calculations</router-link></p>
+        <p><router-link to="/records/add">Add new calculation</router-link></p>
+
+        <p><router-link :to="'/users/edit/' + user._id">Manage my profile</router-link></p>
+
+        <p><router-link v-if="user.admin" to="/create_operation">New operation</router-link></p>
     </div>
 </template>

@@ -7,7 +7,8 @@ import { router } from '@/router';
 
 const schema = Yup.object().shape({
     username: Yup.string()
-        .required('Username is required'),
+        .required('Username is required')
+        .email(),
     password: Yup.string()
         .required('Password is required')
         .min(6, 'Password must be at least 6 characters')

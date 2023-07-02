@@ -15,6 +15,8 @@ const onClick = async (value) => {
 
 <template>
         <div class="container">
+            <h1>Demo</h1>
+            <sub>This calculator is for demonstration purpose only.</sub>
             <div id="calc" class="text-center">
               <div id="display">
               <div id="result"><p>{{calculateStore.result}}</p></div>

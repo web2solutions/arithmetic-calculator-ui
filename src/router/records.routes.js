@@ -1,11 +1,10 @@
-import { Layout, List, AddEdit } from '@/views/records';
+import { Layout, List, Add } from '@/views/records';
 
 export default {
     path: '/records',
     component: Layout,
     children: [
         { path: '', component: List },
-        { path: 'add', component: AddEdit },
-        { path: 'edit/:id', component: AddEdit }
+        { path: 'add', component: Add }
     ]
 };

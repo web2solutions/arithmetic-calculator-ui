@@ -41,6 +41,7 @@ function onChangePageNumber (event) {
                 <th style="width: 30%">ID</th>
                 <th style="width: 40%">Username</th>
                 <th style="width: 10%">Type</th>
+                <th style="width: 10%">Balance</th>
                 <th style="width: 10%">Status</th>
                 <th style="width: 10%"></th>
             </tr>
@@ -51,6 +52,7 @@ function onChangePageNumber (event) {
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.admin ? 'admin' : 'user' }}</td>
+                    <td>{{ user.balance }}</td>
                     <td>{{ user.status }}</td>
                     <td style="white-space: nowrap">
                         <router-link :to="`/users/edit/${user.id}`" class="btn btn-sm btn-primary mr-1">Edit</router-link>
@@ -66,12 +68,12 @@ function onChangePageNumber (event) {
                 </tr>
             </template>
             <tr v-if="users.loading">
-                <td colspan="5" class="text-center">
+                <td colspan="6" class="text-center">
                     <span class="spinner-border spinner-border-lg align-center"></span>
                 </td>
             </tr>
             <tr v-if="users.error">
-                <td colspan="5">
+                <td colspan="6">
                     <div class="text-danger">Error loading users: {{users.error}}</div>
                 </td>
             </tr>
@@ -79,7 +81,7 @@ function onChangePageNumber (event) {
                 <td colspan="1">
                     <div class="text-danger align-left">Total: {{usersStore.total}}</div>
                 </td>
-                <td colspan="1">
+                <td colspan="2">
                     <div class="text-danger align-left">
                         <select name="pageSize" class="form-control" @change="onChangePageSize($event);">
                             <option value="">selecte one</option>

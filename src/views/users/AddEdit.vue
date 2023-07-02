@@ -27,6 +27,8 @@ const schema = Yup.object().shape({
         .email(),
     status: Yup.string()
         .required('Status is required'),
+    balance: Yup.number()
+        .required('balance is required'),
     admin: Yup.string()
         .required('Type is required'),
     password: Yup.string()
@@ -129,6 +131,16 @@ function validateEmail(value) {
                         </option>
                     </Field>
                     <div class="invalid-feedback">{{ errors.admin }}</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col">
+                    <label>Balance</label>
+                    <Field name="balance" type="number" class="form-control" :class="{ 'is-invalid': errors.balance }" />
+                    <div class="invalid-feedback">{{ errors.balance }}</div>
+                </div>
+                <div class="form-group col">
+                   
                 </div>
             </div>
             <div class="form-group">

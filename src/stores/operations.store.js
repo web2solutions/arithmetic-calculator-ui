@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { getSession } from './session';
+import { useAuthStore } from '@/stores';
 
 const session = getSession();
 
@@ -17,7 +18,18 @@ export const useOperationsStore = defineStore({
         pages: []
     }),
     actions: {
-        setPaging (query) {
+        reset () {
+            this.operations = {};
+            this.operation = {};
+            this.page = 1;
+            this.pageSize = 20;
+            this.pageSizes = [5, 10, 15, 20, 50, 100];
+            this.total = 0;
+            this.numberOfPages = 0;
+            this.pageTotalRecords = [1];
+            this.pages = [];
+        },
+        setPaging(query) {
             const { page, size } = query;
             if (page) {
                 operationsStore.page = page;
@@ -34,13 +46,20 @@ export const useOperationsStore = defineStore({
                     message
                 } = await session.post(`operations`, operation);
                 if ((code === 201 || code === 0) && data) {
-                    this.users.push(data);
+                    if (isNaN(this.operations.length)) {
+                        this.operations = [];
+                    }
+                    this.operations.push(data);
                 } else {
                     throw new Error(message);
                 }
             } catch (error) {
                 console.warn(error);
                 this.operation = { error };
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 throw new Error(error.message);
             }
         },
@@ -70,6 +89,10 @@ export const useOperationsStore = defineStore({
                 }
             } catch (error) {
                 console.warn(error);
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 this.operations = { error };
             }
         },
@@ -88,6 +111,10 @@ export const useOperationsStore = defineStore({
                 }
             } catch (error) {
                 console.warn(error);
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 this.operation = { error };
             }
         },
@@ -118,6 +145,10 @@ export const useOperationsStore = defineStore({
                 }
             } catch (error) {
                 console.warn(error);
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 throw error;
             }
         },
@@ -138,6 +169,10 @@ export const useOperationsStore = defineStore({
                 }
             } catch (error) {
                 console.warn(error);
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 throw error;
             }
         }

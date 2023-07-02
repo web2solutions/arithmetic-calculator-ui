@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { getSession } from './session';
+import { useAuthStore } from '@/stores';
 
 const session = getSession();
 
@@ -17,6 +18,17 @@ export const useRecordsStore = defineStore({
         pages: []
     }),
     actions: {
+        reset () {
+            this.operations = {};
+            this.operation = {};
+            this.page = 1;
+            this.pageSize = 20;
+            this.pageSizes = [5, 10, 15, 20, 50, 100];
+            this.total = 0;
+            this.numberOfPages = 0;
+            this.pageTotalRecords = [1];
+            this.pages = [];
+        },
         setPaging (query) {
             const { page, size } = query;
             if (page) {
@@ -34,13 +46,25 @@ export const useRecordsStore = defineStore({
                     message
                 } = await session.post(`records`, record);
                 if ((code === 201 || code === 0) && data) {
-                    this.users.push(data);
+                    if (isNaN(this.records.length)) {
+                        this.records = [];
+                    }
+                    this.records.push(data);
                 } else {
                     throw new Error(message);
+                }
+                return {
+                    data,
+                    code,
+                    message
                 }
             } catch (error) {
                 console.warn(error);
                 this.record = { error };
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 throw new Error(error.message);
             }
         },
@@ -70,6 +94,10 @@ export const useRecordsStore = defineStore({
                 }
             } catch (error) {
                 console.warn(error);
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 this.records = { error };
             }
         },
@@ -88,6 +116,10 @@ export const useRecordsStore = defineStore({
                 }
             } catch (error) {
                 console.warn(error);
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 this.record = { error };
             }
         },
@@ -102,22 +134,31 @@ export const useRecordsStore = defineStore({
                     code,
                     message
                 } = await session.put(`records/${id}`, params);
+                console.log({
+                    data,
+                    code,
+                    message
+                })
                 if ((code === 200 || code === 0) && data) {
                     if(params.status === 'active') {
                         this.records.find(x => x.id === id).status = 'active';
                         this.records.find(x => x.id === id).isRestoring = false;
                     }
-                    this.records = this.records.map(record =>{
+                    /* this.records = this.records.map(record =>{
                         if(record.id === id) {
                             return { ...record, ...data };
                         }
                         return record;
-                    });
+                    });*/
                 } else {
                     throw new Error(message);
                 }
             } catch (error) {
                 console.warn(error);
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 throw error;
             }
         },
@@ -138,8 +179,14 @@ export const useRecordsStore = defineStore({
                 }
             } catch (error) {
                 console.warn(error);
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
                 throw error;
             }
-        }
+        },
+
+        
     }
 });

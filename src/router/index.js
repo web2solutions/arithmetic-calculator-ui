@@ -27,8 +27,8 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-    console.info('>>>>>>>>>>>> TO', to)
-    console.info('>>>>>>>>>>>> FROM', from)
+    // console.info('>>>>>>>>>>>> TO', to)
+    // console.info('>>>>>>>>>>>> FROM', from)
     // clear alert on route change
     const alertStore = useAlertStore();
     alertStore.clear();
@@ -50,6 +50,10 @@ router.beforeEach(async (to, from) => {
 
     
     if(to.path === '/users' ) {
+        if (!authStore.user.admin) {
+            // authStore.returnUrl = to.fullPath;
+            return '/';
+        }
         let oldPage = undefined;
         let oldSize = undefined;
         if(from.path === '/users') {
@@ -78,6 +82,10 @@ router.beforeEach(async (to, from) => {
 
 
     if(to.path === '/operations') {
+        if (!authStore.user.admin) {
+            // authStore.returnUrl = to.fullPath;
+            return '/';
+        }
         let oldPage = undefined;
         let oldSize = undefined;
         if(from.path === '/operations') {
@@ -105,6 +113,10 @@ router.beforeEach(async (to, from) => {
     }
 
     if(to.path === '/records') {
+        if (!authStore.user.admin) {
+            // authStore.returnUrl = to.fullPath;
+            // return '/';
+        }
         let oldPage = undefined;
         let oldSize = undefined;
         if(from.path === '/records') {

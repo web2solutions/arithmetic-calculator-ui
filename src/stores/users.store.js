@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { getSession } from './session';
 import { useAuthStore } from '@/stores';
-
+import { useAlertStore } from '@/stores';
 const session = getSession();
 
 export const useUsersStore = defineStore({
@@ -18,6 +18,17 @@ export const useUsersStore = defineStore({
         pages: []
     }),
     actions: {
+        reset () {
+            this.operations = {};
+            this.operation = {};
+            this.page = 1;
+            this.pageSize = 20;
+            this.pageSizes = [5, 10, 15, 20, 50, 100];
+            this.total = 0;
+            this.numberOfPages = 0;
+            this.pageTotalRecords = [1];
+            this.pages = [];
+        },
         setPaging (query) {
             const { page, size } = query;
             if (page) {
@@ -33,15 +44,19 @@ export const useUsersStore = defineStore({
                     data,
                     code,
                     message
-                } = await session.post(`users`, user);
+                } = await session.post(`users/register`, user);
                 if ((code === 201 || code === 0) && data) {
                     // 
                 } else {
                     throw new Error(message);
                 }
             } catch (error) {
-                console.warn(error);
+                // error.message
+								// Not Found, Unauthorized
+								const alertStore = useAlertStore();
+                alertStore.error(error.message); 
                 this.user = { error };
+								throw error;
             }
         },
         async getAll() {
@@ -69,8 +84,12 @@ export const useUsersStore = defineStore({
                     throw new Error(message);
                 }
             } catch (error) {
-                console.warn(error);
+                console.warn(error.message);
                 this.users = { error };
+								if(error.message === 'Unauthorized') {
+									const authStore = useAuthStore();
+									authStore.logout();
+								}
             }
         },
         async getById(id) {
@@ -89,6 +108,10 @@ export const useUsersStore = defineStore({
             } catch (error) {
                 console.warn(error);
                 this.user = { error };
+								if(error.message === 'Unauthorized') {
+									const authStore = useAuthStore();
+									authStore.logout();
+								}
             }
         },
 
@@ -109,7 +132,7 @@ export const useUsersStore = defineStore({
                     }
                     this.users = this.users.map(user =>{
                         if(user.id === id) {
-                            return { ...user, ...data };
+                            return { ...user, ...data, token: session.token };
                         }
                         return user;
                     });
@@ -117,7 +140,7 @@ export const useUsersStore = defineStore({
                     const authStore = useAuthStore();
                     if (id === authStore.user.id) {
                         // update local storage
-                        const user = { ...authStore.user, ...params };
+                        const user = { ...authStore.user, ...params, token: session.token };
                         localStorage.setItem('user', JSON.stringify(user));
 
                         // update auth user in pinia state
@@ -128,6 +151,10 @@ export const useUsersStore = defineStore({
                 }
             } catch (error) {
                 console.warn(error);
+								if(error.message === 'Unauthorized') {
+									const authStore = useAuthStore();
+									authStore.logout();
+								}
                 throw error;
             }
         },
@@ -155,6 +182,10 @@ export const useUsersStore = defineStore({
                 }
             } catch (error) {
                 console.warn(error);
+								if(error.message === 'Unauthorized') {
+									const authStore = useAuthStore();
+									authStore.logout();
+								}
                 throw error;
             }
         }

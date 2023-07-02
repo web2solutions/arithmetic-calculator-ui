@@ -33,8 +33,8 @@ function onChangePageNumber (event) {
 </script>
 
 <template>
-    <h1>Operations</h1>
-    <router-link to="/operations/add" class="btn btn-sm btn-success mb-2">Add Operation</router-link>
+    <h1>Operation's types</h1>
+    <router-link to="/operations/add" class="btn btn-sm btn-success mb-2">Add new type of Operation</router-link>
     <table class="table table-striped">
         <thead>
             <tr>

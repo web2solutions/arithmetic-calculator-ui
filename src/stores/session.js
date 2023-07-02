@@ -1,25 +1,28 @@
 class Session {
     #_apiURL = 'http://localhost:3000/dev';
     #_user = false;
-    #_headers = {};
+    #_headers_public = new Headers();
+    #_headers_private = new Headers();
     constructor(apiURL) {
         // this.#_apiURL = apiURL;
         const userLstorage = localStorage.getItem('user');
         if (userLstorage) {
             const user = JSON.parse(userLstorage);
             this.#_user = user;
+            this.#_headers_private = new Headers();
+            this.#_headers_private.append('Authorization', `Bearer ${user.token}`)
         }
-        this.#_headers = new Headers();
+        // this.#_headers_public.append('Content-Type', 'application/json');
+        // this.#_headers_private.append('Content-Type', 'application/json');
+        // this.#_headers_private.append('Authorization', `Bearer ${this.token}`)
 
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
     }
 
     async login(username, password) {
         try {
             const response = await fetch(`${this.#_apiURL}/users/login`, {
                 method: 'POST',
-                headers: this.#_headers,
+                headers: this.#_headers_public,
                 body: JSON.stringify({
                     username,
                     password
@@ -31,14 +34,10 @@ class Session {
                 code,
                 message
             } = await response.json();
-            console.log({
-                data,
-                code,
-                message
-            });
-
             if ((code === 200 || code === 0) && data) {
                 this.#_user = data;
+                this.#_headers_private = new Headers();
+                this.#_headers_private.append('Authorization', `Bearer ${this.#_user.token}`)
                 return true;
             } else {
                 throw new Error(message);
@@ -49,10 +48,11 @@ class Session {
         }
     }
     async logout(username, token) {
+        console.log('LOGOUT >>>>>>>>', { username, token });
         try {
             const response = await fetch(`${this.#_apiURL}/users/logout`, {
                 method: 'POST',
-                headers: this.#_headers,
+                headers: this.#_headers_public,
                 body: JSON.stringify({
                     username,
                     token
@@ -64,20 +64,16 @@ class Session {
                 code,
                 message
             } = await response.json();
-            console.log({
-                data,
-                code,
-                message
-            });
-
-            if ((code === 200 || code === 0) && data) {
+            if ((code === 200 || code === 401 || code === 0)) {
                 this.#_user = false;
+                this.#_headers_public = new Headers();
+                this.#_headers_private = new Headers();
                 return true;
             } else {
                 throw new Error(message);
             }
         } catch (error) {
-            console.log('error', error.message);
+            console.log('error XXXXXXXXX', error.message);
             throw error;
         }
     }
@@ -94,15 +90,20 @@ class Session {
         return this.#_user ? this.#_user.token : '';
     }
 
-    async 'get'(endPoint, paging) {
+    async 'get'(endPoint, paging = {}) {
         const { page, size } = paging;
-        console.log({ page, size })
         try {
-            const url = `${this.#_apiURL}/${endPoint}?page=${page}&size=${size}`;
-            console.log(url)
+            let url = `${this.#_apiURL}/${endPoint}`;
+            if (page) {
+                url += `?page=${page}`
+            }
+            if (size) {
+                url += `&size=${size}`
+            }
+            console.log(url, this.#_headers_private)
             const response = await fetch(url, {
                 method: 'GET',
-                headers: this.#_headers,
+                headers: this.#_headers_private,
             });
 
             const {
@@ -110,11 +111,10 @@ class Session {
                 code,
                 message
             } = await response.json();
-            console.log({
-                data,
-                code,
-                message
-            });
+
+            if(response.status >= 400 && response.status <= 500) {
+                throw new Error(response.statusText);
+            }
 
             return {
                 data,
@@ -133,7 +133,7 @@ class Session {
             console.log(url)
             const response = await fetch(url, {
                 method: 'POST',
-                headers: this.#_headers,
+                headers: this.#_headers_private,
                 body: JSON.stringify(payload),
             });
 
@@ -142,11 +142,15 @@ class Session {
                 code,
                 message
             } = await response.json();
-            console.log({
+            console.log( {
                 data,
                 code,
-                message
-            });
+                message,
+                response
+            })
+            if(response.status >= 400 && response.status <= 500) {
+                throw new Error(response.statusText);
+            }
 
             return {
                 data,
@@ -165,7 +169,7 @@ class Session {
             console.log(url)
             const response = await fetch(url, {
                 method: 'PUT',
-                headers: this.#_headers,
+                headers: this.#_headers_private,
                 body: JSON.stringify(payload),
             });
 
@@ -174,11 +178,9 @@ class Session {
                 code,
                 message
             } = await response.json();
-            console.log({
-                data,
-                code,
-                message
-            });
+            if(response.status >= 400 && response.status <= 500) {
+                throw new Error(response.statusText);
+            }
 
             return {
                 data,
@@ -197,7 +199,7 @@ class Session {
             console.log(url)
             const response = await fetch(url, {
                 method: 'DELETE',
-                headers: this.#_headers,
+                headers: this.#_headers_private,
             });
 
             const {
@@ -205,11 +207,9 @@ class Session {
                 code,
                 message
             } = await response.json();
-            console.log({
-                data,
-                code,
-                message
-            });
+            if(response.status >= 400 && response.status <= 500) {
+                throw new Error(response.statusText);
+            }
 
             return {
                 data,

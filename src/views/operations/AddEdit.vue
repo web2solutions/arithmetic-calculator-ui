@@ -12,11 +12,11 @@ const alertStore = useAlertStore();
 const route = useRoute();
 const id = route.params.id;
 
-let title = 'Add Operation';
+let title = 'Add Operation Type';
 let operation = null;
 if (id) {
     // edit mode
-    title = 'Edit Operation';
+    title = 'Edit Operation Type';
     ({ operation } = storeToRefs(operationsStore));
     operationsStore.getById(id);
 }
@@ -54,9 +54,26 @@ async function onSubmit(values) {
         <Form @submit="onSubmit" :validation-schema="schema" :initial-values="operation" v-slot="{ errors, isSubmitting }">
             <div class="form-row">
                 <div class="form-group col">
-                    <label>Cost</label>
-                    <Field name="cost" type="number" class="form-control" :class="{ 'is-invalid': errors.cost }" />
-                    <div class="invalid-feedback">{{ errors.cost }}</div>
+                    <label>
+                        Type
+                    </label>
+                    <Field 
+                        name="type" 
+                        as="select"
+                        class="form-control" 
+                        :class="{ 'is-invalid': errors.type }"
+                    >
+                        <option value="" selected></option>
+                        <option 
+                            v-for="type in ['addition', 'subtraction', 'multiplication', 'division', 'square_root', 'random_string']" 
+                            :key="type"
+                            :value="type"
+                            :selected="operation && operation.type === type"
+                        >
+                            {{type}}
+                        </option>
+                    </Field>
+                    <div class="invalid-feedback">{{ errors.type }}</div>
                 </div>
                 <div class="form-group col">
                     <label>Status</label>
@@ -81,26 +98,9 @@ async function onSubmit(values) {
             </div>
             <div class="form-row">
                 <div class="form-group col">
-                    <label>
-                        Type
-                    </label>
-                    <Field 
-                        name="type" 
-                        as="select"
-                        class="form-control" 
-                        :class="{ 'is-invalid': errors.type }"
-                    >
-                        <option value="" selected></option>
-                        <option 
-                            v-for="type in ['addition', 'subtraction', 'multiplication', 'division', 'square_root', 'random_string']" 
-                            :key="type"
-                            :value="type"
-                            :selected="operation && operation.type === type"
-                        >
-                            {{type}}
-                        </option>
-                    </Field>
-                    <div class="invalid-feedback">{{ errors.type }}</div>
+                    <label>Cost</label>
+                    <Field name="cost" type="number" class="form-control" :class="{ 'is-invalid': errors.cost }" />
+                    <div class="invalid-feedback">{{ errors.cost }}</div>
                 </div>
                 <div class="form-group col">
                     

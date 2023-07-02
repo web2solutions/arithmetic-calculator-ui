@@ -33,14 +33,17 @@ function onChangePageNumber (event) {
 </script>
 
 <template>
-    <h1>Records</h1>
-    <router-link to="/records/add" class="btn btn-sm btn-success mb-2">Add Record</router-link>
+    <h1>Calculated operations</h1>
+    <router-link to="/records/add" class="btn btn-sm btn-success mb-2">Add new calculation</router-link>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th style="width: 30%">ID</th>
-                <th style="width: 20%">Cost</th>
-                <th style="width: 30%">Type</th>
+                <th style="width: 10%">ID</th>
+                <th style="width: 20%">User</th>
+                <th style="width: 20%">User input</th>
+                <th style="width: 20%">Operation</th>
+                <th style="width: 20%">Result</th>
+                <th style="width: 10%">Amount</th>
                 <th style="width: 10%">Status</th>
                 <th style="width: 10%"></th>
             </tr>
@@ -49,11 +52,13 @@ function onChangePageNumber (event) {
             <template v-if="records.length">
                 <tr v-for="record in records" :key="record.id">
                     <td>{{ record.id }}</td>
-                    <td>{{ record.cost }}</td>
-                    <td>{{ record.type }}</td>
+                    <td>{{ record.user_id.username }}</td>
+                    <td>{{ record.user_input_numbers.join(', ') }}</td>
+                    <td>{{ record.operation_id.type }}</td>
+                    <td>{{ record.operation_response }}</td>
+                    <td>{{ record.amount }}</td>
                     <td>{{ record.status }}</td>
                     <td style="white-space: nowrap">
-                        <router-link :to="`/records/edit/${record.id}`" class="btn btn-sm btn-primary mr-1">Edit</router-link>
                         <button v-if="record.status === 'active'" @click="recordsStore.delete(record.id)" class="btn btn-sm btn-danger btn-delete-record" :disabled="record.isDeleting">
                             <span v-if="record.isDeleting" class="spinner-border spinner-border-sm"></span>
                             <span v-else>Delete</span>
@@ -66,12 +71,12 @@ function onChangePageNumber (event) {
                 </tr>
             </template>
             <tr v-if="records.loading">
-                <td colspan="5" class="text-center">
+                <td colspan="8" class="text-center">
                     <span class="spinner-border spinner-border-lg align-center"></span>
                 </td>
             </tr>
             <tr v-if="records.error">
-                <td colspan="5">
+                <td colspan="8">
                     <div class="text-danger">Error loading records: {{records.error}}</div>
                 </td>
             </tr>
@@ -79,7 +84,7 @@ function onChangePageNumber (event) {
                 <td colspan="1">
                     <div class="text-danger align-left">Total: {{recordsStore.total}}</div>
                 </td>
-                <td colspan="2">
+                <td colspan="4">
                     <div class="text-danger align-left">
                         <select name="pageSize" class="form-control" @change="onChangePageSize($event);">
                             <option value="">selecte one</option>
@@ -94,7 +99,7 @@ function onChangePageNumber (event) {
                         </select>
                     </div>
                 </td>
-                <td colspan="2">
+                <td colspan="3">
                     <div class="text-danger align-left">
                         <select name="pageSize" class="form-control" @change="onChangePageNumber($event);">
                             <option value="">selecte one</option>
