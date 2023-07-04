@@ -55,7 +55,7 @@ function onChangePageNumber (event) {
                     <td>{{ record.id }}</td>
                     <td>{{ record.user_id.username }}</td>
                     <td>{{ record.user_input_numbers.join(', ') }}</td>
-                    <td>{{ record.operation_id.type }}</td>
+                    <td>{{ record.operation_id?.type }}</td>
                     <td>{{ record.operation_response }}</td>
                     <td>{{ record.amount }}</td>
                     <td>{{ record.date }}</td>
