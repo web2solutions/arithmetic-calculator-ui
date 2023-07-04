@@ -44,6 +44,7 @@ function onChangePageNumber (event) {
                 <th style="width: 20%">Operation</th>
                 <th style="width: 20%">Result</th>
                 <th style="width: 10%">Amount</th>
+                <th style="width: 10%">Date</th>
                 <th style="width: 10%">Status</th>
                 <th style="width: 10%"></th>
             </tr>
@@ -57,6 +58,7 @@ function onChangePageNumber (event) {
                     <td>{{ record.operation_id.type }}</td>
                     <td>{{ record.operation_response }}</td>
                     <td>{{ record.amount }}</td>
+                    <td>{{ record.date }}</td>
                     <td>{{ record.status }}</td>
                     <td style="white-space: nowrap">
                         <button v-if="record.status === 'active'" @click="recordsStore.delete(record.id)" class="btn btn-sm btn-danger btn-delete-record" :disabled="record.isDeleting">
@@ -71,12 +73,12 @@ function onChangePageNumber (event) {
                 </tr>
             </template>
             <tr v-if="records.loading">
-                <td colspan="8" class="text-center">
+                <td colspan="9" class="text-center">
                     <span class="spinner-border spinner-border-lg align-center"></span>
                 </td>
             </tr>
             <tr v-if="records.error">
-                <td colspan="8">
+                <td colspan="9">
                     <div class="text-danger">Error loading records: {{records.error}}</div>
                 </td>
             </tr>
@@ -99,7 +101,7 @@ function onChangePageNumber (event) {
                         </select>
                     </div>
                 </td>
-                <td colspan="3">
+                <td colspan="4">
                     <div class="text-danger align-left">
                         <select name="pageSize" class="form-control" @change="onChangePageNumber($event);">
                             <option value="">selecte one</option>
