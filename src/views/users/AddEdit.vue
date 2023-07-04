@@ -45,7 +45,7 @@ async function onSubmit(values) {
             await usersStore.update(user.value.id, values)
             message = 'User updated';
         } else {
-            await usersStore.register(values);
+            await usersStore.create(values);
             message = 'User added';
         }
         await router.push('/users');
@@ -53,20 +53,6 @@ async function onSubmit(values) {
     } catch (error) {
         alertStore.error(error);
     }
-}
-
-function validateEmail(value) {
-      // if the field is empty
-      if (!value) {
-        return 'This field is required';
-      }
-      // if the field is not a valid email
-      const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-      if (!regex.test(value)) {
-        return 'This field must be a valid email';
-      }
-      // All is good
-      return true;
 }
 </script>
 
@@ -144,7 +130,7 @@ function validateEmail(value) {
                 </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-primary" :disabled="isSubmitting">
+                <button class="btn btn-primary" :disabled="isSubmitting" name="save">
                     <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
                     Save
                 </button>

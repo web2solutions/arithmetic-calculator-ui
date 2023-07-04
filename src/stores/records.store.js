@@ -32,10 +32,10 @@ export const useRecordsStore = defineStore({
         setPaging (query) {
             const { page, size } = query;
             if (page) {
-                recordsStore.page = page;
+                this.page = page;
             }
             if (size) {
-                recordsStore.pageSize = size;
+                this.pageSize = size;
             }
         },
         async create(record) {

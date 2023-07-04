@@ -14,3 +14,19 @@ See the [requirement's list](./TrueNorth_LoanPro_Coding_Challenge.pdf).
 * Pinia
 * Bootstrap
 * fetch
+
+
+## Preparing the development environment using your current NodeJS installation
+
+```bash
+npm install
+```
+
+Before run the dev server, please be sure that you have the [arithmetic-calculator-api](https://github.com/web2solutions/arithmetic-calculator-api) up and running.
+
+
+`Run dev server`:
+
+```bash
+npm run dev
+```

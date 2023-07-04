@@ -1,12 +1,16 @@
 /* eslint-env node */
 module.exports = {
     "root": true,
+    env: {
+        browser: true,
+        node: true,
+        "vue/setup-compiler-macros": true,
+    },
     "extends": [
         "plugin:vue/vue3-essential",
         "eslint:recommended"
     ],
-    "env": {
-        "vue/setup-compiler-macros": true,
-        "vue/multi-word-component-names": false
+    "rules": {
+        "vue/multi-word-component-names": 0,
     }
 }

@@ -32,10 +32,10 @@ export const useUsersStore = defineStore({
         setPaging (query) {
             const { page, size } = query;
             if (page) {
-                usersStore.page = page;
+                this.page = page;
             }
             if (size) {
-                usersStore.pageSize = size;
+                this.pageSize = size;
             }
         },
         async register(user) {
@@ -57,6 +57,31 @@ export const useUsersStore = defineStore({
                 alertStore.error(error.message); 
                 this.user = { error };
 								throw error;
+            }
+        },
+        async create(user) {
+            try {
+                const {
+                    data,
+                    code,
+                    message
+                } = await session.post(`users`, user);
+                if ((code === 201 || code === 0) && data) {
+                    if (isNaN(this.users.length)) {
+                        this.users = [];
+                    }
+                    this.users.push(data);
+                } else {
+                    throw new Error(message);
+                }
+            } catch (error) {
+                console.warn(error);
+                this.user = { error };
+                if(error.message === 'Unauthorized') {
+                    const authStore = useAuthStore();
+                    authStore.logout();
+                }
+                throw new Error(error.message);
             }
         },
         async getAll() {

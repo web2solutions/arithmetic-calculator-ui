@@ -1,7 +1,6 @@
 <script setup>
 import { Form, Field } from 'vee-validate';
 import * as Yup from 'yup';
-import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
 import { useOperationsStore, useAlertStore, useRecordsStore } from '@/stores';
@@ -10,10 +9,8 @@ import { router } from '@/router';
 const operationsStore = useOperationsStore();
 const recordsStore = useRecordsStore();
 const alertStore = useAlertStore();
-const route = useRoute();
 
 const { operations } = storeToRefs(operationsStore);
-const { records } = storeToRefs(recordsStore);
 
 operationsStore.getAll()
 
@@ -45,7 +42,7 @@ const schema = Yup.object().shape({
 
 function onSelectType (event) {
     console.log(event.target.value)
-    const [id, type] = event.target.value.split(',');
+    const type = event.target.value.split(',')[1];
     selectedType = type;
 }
 
@@ -62,12 +59,12 @@ async function onSubmit(values) {
             user_input_numbers = []
         }
         // 
-        const record = {
+        const payload = {
             operation_id: id,   
             user_input_numbers
         }
         // let message;
-        const { data, code, message } = await recordsStore.create(record);
+        const { data, code, message } = await recordsStore.create(payload);
         if (code === 402) {
             record = { error: message };
             alertStore.error(message);

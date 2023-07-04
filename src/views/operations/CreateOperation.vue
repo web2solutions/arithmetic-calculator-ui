@@ -1,12 +1,7 @@
 <script setup>
-import { useRoute } from 'vue-router';
-
-import { useAlertStore, useCalculateStore } from '@/stores';
-import { router } from '@/router';
+import { useCalculateStore } from '@/stores';
 
 const calculateStore = useCalculateStore();
-const alertStore = useAlertStore();
-const route = useRoute();
 
 const onClick = async (value) => {
     calculateStore.input(value);

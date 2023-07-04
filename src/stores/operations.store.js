@@ -32,10 +32,10 @@ export const useOperationsStore = defineStore({
         setPaging(query) {
             const { page, size } = query;
             if (page) {
-                operationsStore.page = page;
+                this.page = page;
             }
             if (size) {
-                operationsStore.pageSize = size;
+                this.pageSize = size;
             }
         },
         async create(operation) {

@@ -5,8 +5,8 @@ import * as Yup from 'yup';
 import { useAuthStore } from '@/stores';
 
 const schema = Yup.object().shape({
-    username: Yup.string().required('Username is required'),
-    password: Yup.string().required('Password is required')
+    username: Yup.string().email().required('Username is required'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required')
 });
 
 async function onSubmit(values) {
@@ -32,7 +32,7 @@ async function onSubmit(values) {
                     <div class="invalid-feedback">{{ errors.password }}</div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary" :disabled="isSubmitting">
+                    <button class="btn btn-primary" :disabled="isSubmitting" name="login">
                         <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
                         Login
                     </button>

@@ -61,14 +61,14 @@ function onChangePageNumber (event) {
                     <td>{{ record.date }}</td>
                     <td>{{ record.status }}</td>
                     <td style="white-space: nowrap">
-                        <button v-if="record.status === 'active'" @click="recordsStore.delete(record.id)" class="btn btn-sm btn-danger btn-delete-record" :disabled="record.isDeleting">
+                        <!-- <button v-if="record.status === 'active'" @click="recordsStore.delete(record.id)" class="btn btn-sm btn-danger btn-delete-record" :disabled="record.isDeleting">
                             <span v-if="record.isDeleting" class="spinner-border spinner-border-sm"></span>
                             <span v-else>Delete</span>
                         </button>
                         <button v-if="record.status === 'inactive'" @click="recordsStore.update(record.id, { status: 'active' })" class="btn btn-sm btn-success btn-delete-record" :disabled="record.isRestoring">
                             <span v-if="record.isRestoring" class="spinner-border spinner-border-sm"></span>
                             <span v-else>Restore</span>
-                        </button>
+                        </button> -->
                     </td>
                 </tr>
             </template>

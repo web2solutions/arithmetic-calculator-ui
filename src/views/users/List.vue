@@ -56,11 +56,11 @@ function onChangePageNumber (event) {
                     <td>{{ user.status }}</td>
                     <td style="white-space: nowrap">
                         <router-link :to="`/users/edit/${user.id}`" class="btn btn-sm btn-primary mr-1">Edit</router-link>
-                        <button v-if="user.status === 'active'" @click="usersStore.delete(user.id)" class="btn btn-sm btn-danger btn-delete-user" :disabled="user.isDeleting">
+                        <button :name="'delete_' + user.id" v-if="user.status === 'active'" @click="usersStore.delete(user.id)" class="btn btn-sm btn-danger btn-delete-user" :disabled="user.isDeleting">
                             <span v-if="user.isDeleting" class="spinner-border spinner-border-sm"></span>
                             <span v-else>Delete</span>
                         </button>
-                        <button v-if="user.status === 'inactive'" @click="usersStore.update(user.id, { status: 'active' })" class="btn btn-sm btn-success btn-delete-user" :disabled="user.isRestoring">
+                        <button :name="'restore_' + user.id" v-if="user.status === 'inactive'" @click="usersStore.update(user.id, { status: 'active' })" class="btn btn-sm btn-success btn-delete-user" :disabled="user.isRestoring">
                             <span v-if="user.isRestoring" class="spinner-border spinner-border-sm"></span>
                             <span v-else>Restore</span>
                         </button>
