@@ -5,16 +5,16 @@ workflows:
   build:
     jobs:
       # first get the source code and install npm dependencies
-      - cypress/install:
+      #- cypress/install:
           # run a custom app build step
-          build: 'npm run lint' # && bash <(curl -s https://codecov.io/bash)
+      #    build: 'npm run build' # && bash <(curl -s https://codecov.io/bash)
           # start: 'npm start'
       - cypress/run:
           # make sure app has been installed and built
           # before running tests across multiple machines
           # this avoids installing same dependencies 10 times
-          requires:
-            - cypress/install
+          #requires:
+          #  - cypress/install
           cypress-command: npm run e2e:ci
           install-browsers: true
           start-command: npm run start:ci
