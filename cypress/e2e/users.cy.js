@@ -1,36 +1,49 @@
 /*global cy describe, it, assert */
 
+const localURL = 'http://localhost:3000/dev';
+const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
+
+const env = process.env.NODE_ENV || 'dev';
+let APIURL = '';
+
+if (env === 'dev' || env === '') {
+  APIURL  = localURL;
+} else {
+  APIURL  = awsURL
+}
+
 describe('Users CRUD', () => {
 
     it('Users Listing UI', () => {
+        console.log(APIURL);
         cy.intercept({
             method: 'POST',
-            url: 'http://localhost:3000/dev/users/login', // that have a URL that matches '/users/*'
+            url: `${APIURL}/users/login`, // that have a URL that matches '/users/*'
         }).as('loginUser');
 
         cy.intercept({
             method: 'GET',
-            url: 'http://localhost:3000/dev/users*', // that have a URL that matches '/users/*'
+            url: `${APIURL}/users*`, // that have a URL that matches '/users/*'
         }).as('listUsers');
 
         cy.intercept({
             method: 'POST',
-            url: 'http://localhost:3000/dev/users*', // that have a URL that matches '/users/*'
+            url: `${APIURL}/users*`, // that have a URL that matches '/users/*'
         }).as('postUsers');
 
         cy.intercept({
             method: 'GET',
-            url: 'http://localhost:3000/dev/users/*', // that have a URL that matches '/users/*'
+            url: `${APIURL}/users/*`, // that have a URL that matches '/users/*'
         }).as('getUser');
 
         cy.intercept({
             method: 'PUT',
-            url: 'http://localhost:3000/dev/users/*', // that have a URL that matches '/users/*'
+            url: `${APIURL}/users/*`, // that have a URL that matches '/users/*'
         }).as('putUser');
 
         cy.intercept({
             method: 'DELETE',
-            url: 'http://localhost:3000/dev/users/*', // that have a URL that matches '/users/*'
+            url: `${APIURL}/users/*`, // that have a URL that matches '/users/*'
         }).as('delUser');
 
 
