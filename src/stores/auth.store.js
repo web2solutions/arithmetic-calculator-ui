@@ -22,6 +22,7 @@ export const useAuthStore = defineStore({
                 if(login) { 
                     const user = {...session.user, token: session.token };
                     console.log(user);
+                    delete user.password;
                     this.user = user;
                     if(this.user.admin) {
                         this.isAdmin = true;

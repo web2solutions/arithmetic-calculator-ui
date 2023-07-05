@@ -52,11 +52,11 @@ export const useUsersStore = defineStore({
                 }
             } catch (error) {
                 // error.message
-								// Not Found, Unauthorized
-								const alertStore = useAlertStore();
+				// Not Found, Unauthorized
+				const alertStore = useAlertStore();
                 alertStore.error(error.message); 
                 this.user = { error };
-								throw error;
+				throw error;
             }
         },
         async create(user) {
@@ -70,6 +70,7 @@ export const useUsersStore = defineStore({
                     if (isNaN(this.users.length)) {
                         this.users = [];
                     }
+                    delete data.password;
                     this.users.push(data);
                 } else {
                     throw new Error(message);
@@ -126,6 +127,7 @@ export const useUsersStore = defineStore({
                     message
                 } = await session.get(`users/${id}`);
                 if ((code === 200 || code === 0) && data) {
+                    delete data.password;
                     this.user = data;
                 } else {
                     throw new Error(message);
@@ -151,6 +153,7 @@ export const useUsersStore = defineStore({
                     message
                 } = await session.put(`users/${id}`, params);
                 if ((code === 200 || code === 0) && data) {
+                    delete data.password;
                     if(params.status === 'active') {
                         this.users.find(x => x.id === id).status = 'active';
                         this.users.find(x => x.id === id).isRestoring = false;
