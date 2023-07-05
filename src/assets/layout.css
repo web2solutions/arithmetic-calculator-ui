@@ -1,5 +1,6 @@
-.container_records {
+.container {
     height: 100vh;
     min-height: 100vh;
     padding: 4px;
+    width: 100%;
 }

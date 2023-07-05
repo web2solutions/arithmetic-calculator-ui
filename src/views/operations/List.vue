@@ -38,7 +38,7 @@ function onChangePageNumber (event) {
     <table class="table table-striped">
         <thead>
             <tr>
-                <th style="width: 30%">ID</th>
+                <th style="width: 10%">ID</th>
                 <th style="width: 20%">Cost</th>
                 <th style="width: 30%">Type</th>
                 <th style="width: 10%">Status</th>
