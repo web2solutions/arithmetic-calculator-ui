@@ -6,7 +6,7 @@ const authStore = useAuthStore();
 
 <template>
     <nav v-show="authStore.user" class="navbar navbar-expand navbar-dark bg-dark">
-        <router-link to="/" class="navbar-brand">TrueNorth</router-link>
+        <router-link to="/" class="navbar-brand"><img src="https://www.truenorth.co/favicon-32x32.png" alt="TrueNorth"/> TrueNorth</router-link>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
