@@ -6,7 +6,7 @@ const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 const env = process.env.NODE_ENV || 'dev';
 let APIURL = '';
 
-if (env === 'dev' || env === '') {
+if (env === 'dev' || env === '' || env === 'development') {
   APIURL  = localURL;
 } else {
   APIURL  = awsURL

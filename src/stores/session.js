@@ -5,11 +5,13 @@ class Session {
     
     constructor() {
         const env = process.env.NODE_ENV || 'dev';
-        if (env === 'dev' || env === '') {
+        if (env === 'dev' || env === '' || env === 'development') {
             this._apiURL = localURL;
         } else {
+            // CI
             this._apiURL = awsURL
         }
+        console.log(process.env.NODE_ENV)
         console.log('SESSION', this._apiURL)
         this._user = false;
         this.setPublicHeaders();
