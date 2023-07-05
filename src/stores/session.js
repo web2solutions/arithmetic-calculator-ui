@@ -1,4 +1,4 @@
-const localURL = 'http://localhost:3000/dev';
+const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 
 class Session {
@@ -8,6 +8,7 @@ class Session {
         if (env === 'dev' || env === '' || env === 'development') {
             this._apiURL = localURL;
         } else {
+            // CI
             this._apiURL = awsURL
         }
         console.log(process.env.NODE_ENV)

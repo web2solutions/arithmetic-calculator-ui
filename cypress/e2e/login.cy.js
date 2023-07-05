@@ -1,6 +1,6 @@
 /*global cy describe, it, expect */
 
-const localURL = 'http://localhost:3000/dev';
+const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 
 const env = process.env.NODE_ENV || 'dev';
@@ -14,9 +14,9 @@ if (env === 'dev' || env === '' || env === 'development') {
 
 const URL = 'http://localhost:8080/account/login';
 
-describe('User login', () => {
+describe('User login ' + process.env.NODE_ENV, () => {
 
-  it('default ui', () => {
+  it('default ui ' + process.env.NODE_ENV, () => {
     console.log(APIURL);
     cy.visit(URL);
     cy.get('input[name="username"]');
