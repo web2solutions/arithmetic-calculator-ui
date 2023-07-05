@@ -1,7 +1,16 @@
+const localURL = 'http://localhost:3000/dev';
+const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
+
 class Session {
     
     constructor() {
-        this._apiURL = 'http://localhost:3000/dev';
+        const env = process.env.NODE_ENV || 'dev';
+        if (env === 'dev' || env === '') {
+            this._apiURL = localURL;
+        } else {
+            this._apiURL = awsURL
+        }
+        
         this._user = false;
         this.setPublicHeaders();
         this.setPrivateHeaders();

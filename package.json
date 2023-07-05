@@ -9,7 +9,7 @@
     "scripts": {
         "dev": "vite",
         "start": "npm run build && node server.js",
-        "build": "npm run clean && vite build --mode production",
+        "build": "npm run clean && NODE_ENV=test vite build --mode production",
         "clean": "rm -rf ./dist",
         "preview": "vite preview --port 5050",
         "lint": "eslint . --ext .vue,.js --fix --ignore-path .gitignore",
