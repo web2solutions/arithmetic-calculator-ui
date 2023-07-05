@@ -9,15 +9,18 @@
     "scripts": {
         "dev": "vite",
         "start": "npm run build && node server.js",
+        "start:ci": "npm run build:ci && node server.js",
         "build": "npm run clean && NODE_ENV=test vite build --mode production",
         "build:dev": "npm run clean && NODE_ENV=dev vite build --mode production",
+        "build:ci": "npm run clean && NODE_ENV=ci vite build --mode production",
         "clean": "rm -rf ./dist",
         "preview": "vite preview --port 5050",
         "lint": "eslint . --ext .vue,.js --fix --ignore-path .gitignore",
         "cypress:open": "cypress open",
         "cy:run": "cypress run  --browser chrome --spec \"cypress/e2e/*\"",
-        "e2e": "npm run build && node server.js && wait-on http://localhost:8080 && npm run cy:run",
-        "e2e:dev": "npm run build:dev && node server.js && wait-on http://localhost:8080 && NODE_ENV=dev npm run cy:run"
+        "e2e": "npm run build && node server.js && wait-on http://localhost:8080 && NODE_ENV=dev npm run cy:run",
+        "e2e:ci": "NODE_ENV=ci cypress run  --browser chrome --spec \"cypress/e2e/*\"",
+        "e2e:dev": "npm run dev && wait-on http://localhost:8080 && NODE_ENV=dev npm run cy:run"
     },
     "dependencies": {
         "pinia": "^2.0.13",
