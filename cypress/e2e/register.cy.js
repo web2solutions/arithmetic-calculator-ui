@@ -17,6 +17,7 @@ const URL = 'http://localhost:8080/account/register';
 describe('Register user', () => {
   const newUsername = `newuser${Math.random()}@user.com`;
   it('default ui', () => {
+    console.log(APIURL);
     cy.visit(URL);
     cy.get('input[name="username"]');
     cy.get('input[name="password"]');

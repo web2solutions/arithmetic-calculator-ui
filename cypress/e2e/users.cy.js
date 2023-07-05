@@ -15,6 +15,7 @@ if (env === 'dev' || env === '') {
 describe('Users CRUD', () => {
 
     it('Users Listing UI', () => {
+        console.log(APIURL);
         cy.intercept({
             method: 'POST',
             url: `${APIURL}/users/login`, // that have a URL that matches '/users/*'

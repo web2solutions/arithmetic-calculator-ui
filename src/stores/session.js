@@ -10,7 +10,7 @@ class Session {
         } else {
             this._apiURL = awsURL
         }
-        
+        console.log('SESSION', this._apiURL)
         this._user = false;
         this.setPublicHeaders();
         this.setPrivateHeaders();

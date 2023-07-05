@@ -17,6 +17,7 @@ const URL = 'http://localhost:8080/account/login';
 describe('User login', () => {
 
   it('default ui', () => {
+    console.log(APIURL);
     cy.visit(URL);
     cy.get('input[name="username"]');
     cy.get('input[name="password"]');
