@@ -7,7 +7,7 @@ workflows:
       # first get the source code and install npm dependencies
       - cypress/install:
           # run a custom app build step
-          lint: 'npm run lint' # && bash <(curl -s https://codecov.io/bash)
+          build: 'npm run lint' # && bash <(curl -s https://codecov.io/bash)
           # start: 'npm start'
       - cypress/run:
           # make sure app has been installed and built
