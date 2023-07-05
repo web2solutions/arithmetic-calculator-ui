@@ -37,3 +37,7 @@ npm run dev
 ## Online demo
 
 https://arithmetic-calculator-ui-nu.vercel.app/
+
+## Deploy
+
+Auto deploy with [Vercel](https://vercel.com/)
