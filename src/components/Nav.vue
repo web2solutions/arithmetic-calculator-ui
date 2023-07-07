@@ -99,7 +99,7 @@ async function changePhoto() {
                 <button @click="authStore.logout()" class="btn btn-link nav-item nav-link">Logout</button>
                 <div v-if="authStore.user" class="circular-portrait">
                     <img v-if="authStore.user.photo == null && authStore.user.photo !== ''" @click="changePhoto" class="photo" :src="authStore.user.photo" :alt="authStore.user?.username" :title="authStore.user?.username" />
-                    <img v-else @click="changePhoto" class="photo" src="http://localhost:8080/selfie.png" :alt="authStore.user?.username" :title="authStore.user?.username" />
+                    <img v-else @click="changePhoto" class="photo" src="https://arithmetic-calculator-ui-nu.vercel.app/selfie.png" :alt="authStore.user?.username" :title="authStore.user?.username" />
                 </div>
             </form>
         </div>
