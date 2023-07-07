@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
-const localURL = 'http://localhost:3000/dev';
-// const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
+// const localURL = 'http://localhost:3000/dev';
+const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 
 const Toast = Swal.mixin({
