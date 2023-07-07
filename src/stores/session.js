@@ -1,5 +1,20 @@
-const localURL = 'http://localhost:3000/test';
+import Swal from "sweetalert2";
+
+// const localURL = 'http://localhost:3000/dev';
+const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    },
+})
 
 class Session {
     
@@ -65,11 +80,23 @@ class Session {
             } = await response.json();
             if ((code === 200 || code === 0) && data) {
                 this.setPrivateHeaders(data);
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Signed in successfully',
+                    // text: 'Do you want to continue',
+                    // confirmButtonText: 'Cool',
+                })
                 return true;
             } else {
                 throw new Error(message);
             }
         } catch (error) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message,
+                // confirmButtonText: 'Cool',
+            })
             console.log('error', error.message);
             throw error;
         }
@@ -93,11 +120,23 @@ class Session {
             if ((code === 200 || code === 401 || code === 0)) {
                 this._user = false;
                 this._headers_private = new Headers();
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Signed out successfully',
+                    // text: 'Do you want to continue',
+                    // confirmButtonText: 'Cool',
+                })
                 return true;
             } else {
                 throw new Error(message);
             }
         } catch (error) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message,
+                // confirmButtonText: 'Cool',
+            });
             console.log('error XXXXXXXXX', error.message);
             throw error;
         }
@@ -115,7 +154,11 @@ class Session {
         return this._user ? this._user.token : '';
     }
 
-    async 'get'(endPoint, paging = {}) {
+    async 'get'(endPoint, paging = {}, filter = false) {
+        // const safe = {
+        //    filter: window.btoa(JSON.stringify({ ...query.filter })),
+        //};
+
         const { page, size } = paging;
         try {
             let url = `${this._apiURL}/${endPoint}`;
@@ -124,6 +167,9 @@ class Session {
             }
             if (size) {
                 url += `&size=${size}`
+            }
+            if (filter) {
+                url += `&filter=${filter}`
             }
             console.log(url, this._headers_private)
             const response = await fetch(url, {
@@ -138,7 +184,7 @@ class Session {
             } = await response.json();
 
             if(response.status >= 400 && response.status <= 500) {
-                throw new Error(response.statusText);
+                throw new Error(message);
             }
 
             return {
@@ -148,6 +194,12 @@ class Session {
             }
         } catch (error) {
             console.log('error', error.message);
+            Toast.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message,
+                // confirmButtonText: 'Cool',
+            });
             throw error;
         }
     }
@@ -174,7 +226,7 @@ class Session {
                 response
             })
             if(response.status >= 400 && response.status <= 500) {
-                throw new Error(response.statusText);
+                throw new Error(message);
             }
 
             return {
@@ -184,6 +236,12 @@ class Session {
             }
         } catch (error) {
             console.log('error', error.message);
+            Toast.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message,
+                // confirmButtonText: 'Cool',
+            });
             throw error;
         }
     }
@@ -204,7 +262,7 @@ class Session {
                 message
             } = await response.json();
             if(response.status >= 400 && response.status <= 500) {
-                throw new Error(response.statusText);
+                throw new Error(message);
             }
 
             return {
@@ -213,6 +271,12 @@ class Session {
                 message
             }
         } catch (error) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message,
+                // confirmButtonText: 'Cool',
+            });
             console.log('error', error.message);
             throw error;
         }
@@ -243,6 +307,12 @@ class Session {
             }
         } catch (error) {
             console.log('error', error.message);
+            Toast.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message,
+                // confirmButtonText: 'Cool',
+            });
             throw error;
         }
     }
