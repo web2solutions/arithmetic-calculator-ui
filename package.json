@@ -9,7 +9,7 @@
     "scripts": {
         "dev": "vite",
         "start": "npm run build && node server.js",
-        "start:ci": "npm run build:ci && node server.js",
+        "start:ci": "npm run build:ci && NODE_ENV=ci node server.js",
         "build": "npm run clean && NODE_ENV=test vite build --mode production",
         "build:dev": "npm run clean && NODE_ENV=dev vite build --mode production",
         "build:ci": "npm run clean && NODE_ENV=ci vite build --mode production",
@@ -34,6 +34,7 @@
     "devDependencies": {
         "@vitejs/plugin-vue": "^2.3.1",
         "cypress": "^12.16.0",
+        "dotenv": "^16.3.1",
         "eslint": "^8.5.0",
         "eslint-plugin-vue": "^8.2.0",
         "express": "^4.18.2",

@@ -1,6 +1,10 @@
 const express = require('express')
 const app = express()
-const port = 8080
+
+
+const env = process.env.NODE_ENV;
+
+const port = env === 'ci' ? 8090 : env === 'dev' ? 8080 : 80;
 
 app.use('/', express.static('dist'))
 app.use('/account/register', express.static('dist/index.html'))
