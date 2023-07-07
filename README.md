@@ -41,3 +41,47 @@ https://arithmetic-calculator-ui-nu.vercel.app/
 ## Deploy
 
 Auto deploy with [Vercel](https://vercel.com/)
+
+## Building the Single Page Application
+
+Build the SPA for dev env.
+
+```bash
+npm run build:dev
+```
+
+Build the SPA for production env.
+
+```bash
+npm run build
+```
+
+Build the SPA for CI env.
+
+```bash
+npm run build:ci
+```
+
+## Run e2e tests
+
+Build and serve the SPA through the 8080 port using express.
+
+```bash
+npm start
+```
+
+You can check the app at: http://localhost:8080/
+
+Now in another terminal session, run: 
+
+```bash
+npm run e2e
+```
+
+It will run cypress headless through the Chrome browser.
+
+Or, if you want to test using a different browser, you can try:
+
+```bash
+npm run cypress:open
+```

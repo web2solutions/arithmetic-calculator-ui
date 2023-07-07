@@ -8,9 +8,9 @@
     "main": "server.js",
     "scripts": {
         "dev": "vite",
-        "start": "npm run build && node server.js",
+        "start": "npm run build && NODE_ENV=dev node server.js",
         "start:ci": "npm run build:ci && NODE_ENV=ci node server.js",
-        "build": "npm run clean && NODE_ENV=test vite build --mode production",
+        "build": "npm run clean && NODE_ENV=production vite build --mode production",
         "build:dev": "npm run clean && NODE_ENV=dev vite build --mode production",
         "build:ci": "npm run clean && NODE_ENV=ci vite build --mode production",
         "clean": "rm -rf ./dist",
@@ -18,7 +18,7 @@
         "lint": "eslint . --ext .vue,.js --fix --ignore-path .gitignore",
         "cypress:open": "cypress open",
         "cy:run": "cypress run  --browser chrome --spec \"cypress/e2e/*\"",
-        "e2e": "npm run build && node server.js && wait-on http://localhost:8080 && NODE_ENV=dev npm run cy:run",
+        "e2e": "NODE_ENV=dev cypress run --env NODE_ENV=dev --browser chrome --spec \"cypress/e2e/*\"",
         "e2e:ci": "NODE_ENV=ci cypress run --env NODE_ENV=ci --browser chrome --spec \"cypress/e2e/*\"",
         "e2e:dev": "npm run dev && wait-on http://localhost:8080 && NODE_ENV=dev npm run cy:run"
     },

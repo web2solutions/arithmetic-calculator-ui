@@ -21,6 +21,6 @@ app.use('/records/edit/:id', express.static('dist/index.html'))
 app.use('/records/add', express.static('dist/index.html'))
 
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Example app listening on port ${port}`)
 })
