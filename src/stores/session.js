@@ -27,9 +27,6 @@ class Session {
             // aws or CI
             this._apiURL = awsURL;
         }
-
-        console.log(process.env.NODE_ENV)
-        console.log('SESSION', this._apiURL)
         this._user = false;
         this.setPublicHeaders();
         this.setPrivateHeaders();
