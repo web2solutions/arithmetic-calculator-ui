@@ -1,28 +1,33 @@
 <script setup>
 import Swal from 'sweetalert2';
 import { router } from '@/router';
-import { useRecordsStore } from '@/stores';
+import { useRecordsStore, useOperationsStore } from '@/stores';
 
-const html = `
+const operationsStore = useOperationsStore();
+
+
+async function onClickOpenSearch(e) {
+    await operationsStore.getAll();
+    let optionsString = '';
+    [...operationsStore.operations].forEach((o) => {
+        optionsString += `
+            <option value="['${o._id}', '${o.type}']">${o.type}</option>
+        `;
+    })
+    const html = `
         <form style='text-align: left;'>
             <label>Username</label>
             <input class="form-control" type="text" name="username" id="search_username" placeholder="type an username" /> <br/>
-            <label>User type</label>
-            <select class="form-control" name="admin" id="search_admin">
+            <label>Operation type</label>
+            <select class="form-control" name="operation_id" id="operation_id">
                 <option value="">select one</option>
-                <option value="true">admin</option>
-                <option value="false">user</option>
+                ${optionsString}
             </select>
         </form>
-`;
-
-async function onClickOpenSearch(e) {
+    `;
     const { isConfirmed, isDismissed } = await Swal.fire({
-
-        // icon: 'success',
-        title: 'User search',
+        title: 'Operation search',
         html,
-        // text: 'Do you want to continue',
         confirmButtonText: 'search',
         showCancelButton: true,
         customClass: {
@@ -34,30 +39,20 @@ async function onClickOpenSearch(e) {
 
     if (isConfirmed) {
         useRecordsStore.user = { loading: true };
-        // do search
-        // const previousPage = router.currentRoute._value.query.page || false;
-        // const previousSize = router.currentRoute._value.query.size || false;
+        
         const username = document.getElementById('search_username').value;
-        const admin = document.getElementById('search_admin').value;
-        console.log({ username, admin })
+        const operation_id = document.getElementById('operation_id').value;
+        console.log({ username, operation_id })
         const query = {
-            // size: +event.target.value
             filter: {},
         };
-        // if (previousPage) query.page = previousPage;
-        // if (previousSize) query.size = previousSize;
+        
         if (username && username !== '') query.filter['username'] = username
-        if (admin && admin !== '') query.filter['admin'] = admin === 'true' ? true : false;
+        if (operation_id && operation_id !== '') query.filter['operation_id'] = operation_id;
 
         const safe = {
             filter: window.btoa(JSON.stringify({ ...query.filter })),
         };
-
-        // Buffer.from('Hello World!').toString('base64')
-
-        // useUsersStore.filter = window.btoa(JSON.stringify({ ...query.filter }));
-
-        console.log(query, safe)
         
         router.push({ path: '/users', query: safe })
     }
