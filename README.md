@@ -17,7 +17,6 @@ See the [requirement's list](./TrueNorth_LoanPro_Coding_Challenge.pdf).
 * Bootstrap
 * cypress
 
-
 ## Preparing the development environment using your current NodeJS installation
 
 ```bash
@@ -26,17 +25,15 @@ npm install
 
 Before run the dev server, please be sure that you have the [arithmetic-calculator-api](https://github.com/web2solutions/arithmetic-calculator-api) up and running.
 
-
 `Run dev server`:
 
 ```bash
 npm run dev
 ```
 
-
 ## Online demo
 
-https://arithmetic-calculator-ui-nu.vercel.app/
+<https://arithmetic-calculator-ui-nu.vercel.app/>
 
 ## Deploy
 
@@ -62,7 +59,13 @@ Build the SPA for CI env.
 npm run build:ci
 ```
 
-## Run e2e tests
+## Run headless e2e tests
+
+```bash
+npm test
+```
+
+## Run e2e through opening Cypress
 
 Build and serve the SPA through the 8080 port using express.
 
@@ -70,17 +73,9 @@ Build and serve the SPA through the 8080 port using express.
 npm start
 ```
 
-You can check the app at: http://localhost:8080/
+You can check the app at: <http://localhost:8080/>
 
-Now in another terminal session, run: 
-
-```bash
-npm run e2e
-```
-
-It will run cypress headless through the Chrome browser.
-
-Or, if you want to test using a different browser, you can try:
+Now in another terminal session, run:
 
 ```bash
 npm run cypress:open
