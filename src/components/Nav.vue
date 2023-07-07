@@ -15,40 +15,30 @@ const html = `
 
 async function changePhoto() {
     try {
-        const s = Swal.fire({
-
-            // icon: 'success',
+        const swal = Swal.fire({
             title: 'Take you photo',
             html,
-            // text: 'Do you want to continue',
             confirmButtonText: 'save',
             showCancelButton: true,
             customClass: {
                 confirmButton: 'btn btn-sm btn-success mb-2',
                 cancelButton: 'btn btn-sm mb-2',
             }
-        })
+        });
         
         const video = document.querySelector("#video");
-        // const take_photo = document.querySelector("#take_photo");
-        // console.log('xxxxx',video);
-        let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        const canvas = document.querySelector("#canvas");
 
-        let canvas = document.querySelector("#canvas");
         video.srcObject = stream;
 
-        const { isConfirmed, isDismissed } = await s;
+        const { isConfirmed } = await swal;
             if (isConfirmed) {
-
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-            // console.log(video, canvas.getContext('2d'))
-            let image_data_url = canvas.toDataURL('image/jpeg');
-
-            // let base64str = image_data_url.substr(22);
-            // let decoded = atob(base64str);
-            let base64Length = image_data_url.length - (image_data_url.indexOf(',') + 1);
-            let padding = (image_data_url.charAt(image_data_url.length - 2) === '=') ? 2 : ((image_data_url.charAt(image_data_url.length - 1) === '=') ? 1 : 0);
-            let fileSize = (base64Length * 0.75 - padding) / 1024; // kb
+            const image_data_url = canvas.toDataURL('image/jpeg');
+            const base64Length = image_data_url.length - (image_data_url.indexOf(',') + 1);
+            const padding = (image_data_url.charAt(image_data_url.length - 2) === '=') ? 2 : ((image_data_url.charAt(image_data_url.length - 1) === '=') ? 1 : 0);
+            const fileSize = (base64Length * 0.75 - padding) / 1024; // kb
             
             if(fileSize > 100) {
                 Swal.fire({
@@ -58,10 +48,6 @@ async function changePhoto() {
                 })
                 return;
             }
-
-            // data url of the image
-            console.log(image_data_url);
-            // authStore.photo = image_data_url;
 
             await usersStore.update(authStore.user._id, {
                 photo: image_data_url,
@@ -91,9 +77,9 @@ async function changePhoto() {
                 <li class="nav-item">
                     <router-link to="/records" class="nav-item nav-link">Calculated Operations</router-link>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <router-link to="/create_operation"  v-if="authStore.isAdmin" class="nav-item nav-link">New UI</router-link>
-                </li>
+                </li> -->
             </ul>
             <form onsubmit="return false;" class="form-inline my-2 my-lg-0 logout">
                 <button @click="authStore.logout()" class="btn btn-link nav-item nav-link">Logout</button>

@@ -29,9 +29,6 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-    // console.info('>>>>>>>>>>>> TO', to)
-    // console.info('>>>>>>>>>>>> FROM', from)
-    // clear alert on route change
     const alertStore = useAlertStore();
     alertStore.clear();
 
@@ -43,7 +40,7 @@ router.beforeEach(async (to, from) => {
     const publicPages = ['/account/login', '/account/register'];
     const authRequired = !publicPages.includes(to.path);
     const authStore = useAuthStore();
-    console.log('router.beforeEach authStore', authStore)
+    // console.log('router.beforeEach authStore', authStore)
 
     if (authRequired && !authStore.user) {
         authStore.returnUrl = to.fullPath;
@@ -63,7 +60,7 @@ router.beforeEach(async (to, from) => {
             oldPage = oldQUery.page;
             oldSize = oldQUery.size;
         }
-        console.warn('==== setting paging vars')
+
         const { page, size, filter } = to.query;
         
         if (filter) usersStore.filter = filter;
@@ -98,7 +95,7 @@ router.beforeEach(async (to, from) => {
             oldPage = oldQUery.page;
             oldSize = oldQUery.size;
         }
-        console.warn('==== setting paging vars')
+        
         const { page, size, filter } = to.query;
         
         if (filter) operationStore.filter = filter;
@@ -131,7 +128,7 @@ router.beforeEach(async (to, from) => {
             oldPage = oldQUery.page;
             oldSize = oldQUery.size;
         }
-        console.warn('==== setting paging vars')
+        
         const { page, size, filter } = to.query;
         
         if (filter) recordStore.filter = filter;

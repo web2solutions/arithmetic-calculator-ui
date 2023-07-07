@@ -14,8 +14,8 @@ const id = route.params.id;
 
 let title = 'Add User';
 let user = null;
+
 if (id) {
-    // edit mode
     title = 'Edit User';
     ({ user } = storeToRefs(usersStore));
     usersStore.getById(id);
@@ -33,7 +33,6 @@ const schema = Yup.object().shape({
         .required('Type is required'),
     password: Yup.string()
         .transform(x => x === '' ? undefined : x)
-        // password optional in edit mode
         .concat(user ? null : Yup.string().required('Password is required'))
         .min(6, 'Password must be at least 6 characters')
 });
@@ -48,7 +47,6 @@ async function onSubmit(values) {
             await usersStore.create(values);
             message = 'User added';
         }
-        console.log(router.currentRoute);
         await router.push('/users');
         alertStore.success(message);
     } catch (error) {

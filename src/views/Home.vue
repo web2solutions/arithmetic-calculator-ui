@@ -18,6 +18,6 @@ const { user } = storeToRefs(authStore);
 
         <p><router-link to="/profile">Manage my profile</router-link></p>
 
-        <p><router-link v-if="user.admin" to="/create_operation">New operation</router-link></p>
+        <!-- <p><router-link v-if="user.admin" to="/create_operation">New Calcultator UI - POC only</router-link></p> -->
     </div>
 </template>

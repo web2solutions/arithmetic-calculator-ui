@@ -17,17 +17,12 @@ operationsStore.getAll()
 let title = 'Add Operation';
 let { record } = storeToRefs(recordsStore);
 
-function getSelectedType () {
-    return recordsStore.selectedType;
-}
-
 const schema = Yup.object().shape({
     operation_id: Yup.array()
         .required('Operation is required'),    
 });
 
 function onSelectType (event) {
-    console.log(event.target.value)
     const type = event.target.value.split(',')[1];
     recordsStore.selectedType = type;
 }
@@ -36,8 +31,7 @@ async function onSubmit(values) {
     try {
         const {entry1, operation_id, entry2 } = values;
         const [id, type] = operation_id;
-        console.log(values);
-        // return;
+
         let user_input_numbers = [entry1, entry2];
         if (type === 'square_root') {
             if(!entry1 || entry1 === '') {
@@ -70,7 +64,7 @@ async function onSubmit(values) {
             alertStore.error(message);
             return;
         }
-        console.log({ data, code, message });
+        
         await router.push('/records');
         alertStore.success(data.operation_response);
     } catch (error) {
