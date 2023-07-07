@@ -1,27 +1,27 @@
-/*global cy describe, it, expect */
+/*global cy describe, it, expect, Cypress */
+// import { Cypress } from 'cypress';
 
+const env = Cypress.env('NODE_ENV');
 const localURL = 'http://localhost:3000/dev';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
-
+const port = env === 'dev' ? 8080 : env === 'ci' ? 8090 : 8080;
+const URL = `http://localhost:${port}/`;
 let APIURL = '';
+if (port === 8080) {
+  // dev
+  APIURL = localURL;
+}  else {
+  // aws or CI
+  APIURL = awsURL;
+}
+//console.log(URL, APIURL);
 
-const URL = 'http://localhost:8090/account/login';
-
-describe('User login ' + process.env.NODE_ENV, () => {
+describe('User login ' + env, () => {
   
-  it('default ui ' + process.env.NODE_ENV, () => {
+  it('default ui ' + env, () => {
+    console.log(URL)
+    cy.visit(URL + 'account/login');
     
-    cy.visit(URL);
-    
-    const currentServerPort = +window.location.port;
-    if (currentServerPort === 8080) {
-      // dev
-      APIURL = localURL;
-    }  else {
-      // aws or CI
-      APIURL = awsURL;
-    }
-    console.log(APIURL);
     cy.get('input[name="username"]');
     cy.get('input[name="password"]');
     cy.get('button[name="login"]');
@@ -29,7 +29,7 @@ describe('User login ' + process.env.NODE_ENV, () => {
   })
   
   it('must not be able to login new user with invalid username', () => {
-    cy.visit(URL);
+    cy.visit(URL + 'account/login');
     
     const input_username = cy.get('input[name="username"]');
     input_username.type(`newuser${Math.random()}`);
@@ -46,7 +46,7 @@ describe('User login ' + process.env.NODE_ENV, () => {
   });
   
   it('must not be able to login new user with invalid password', () => {
-    cy.visit(URL);
+    cy.visit(URL + 'account/login');
     
     const input_username = cy.get('input[name="username"]');
     input_username.type(`newuser${Math.random()}@user.com`);
@@ -63,7 +63,7 @@ describe('User login ' + process.env.NODE_ENV, () => {
   });
   
   it('register button should go to register page', () => {
-    cy.visit(URL);
+    cy.visit(URL + 'account/login');
     
     const input_register = cy.get('a[href="/account/register"]');
     input_register.click();
@@ -74,7 +74,7 @@ describe('User login ' + process.env.NODE_ENV, () => {
   });
   
   it('must be able to login', () => {
-    cy.visit(URL);
+    cy.visit(URL + 'account/login');
     
     cy.intercept({
       method: 'POST',

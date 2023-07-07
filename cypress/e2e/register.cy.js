@@ -1,18 +1,25 @@
-/*global cy describe, it, expect */
+/*global cy describe, it, expect, Cypress */
 
+const env = Cypress.env('NODE_ENV');
 const localURL = 'http://localhost:3000/dev';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
-
+const port = env === 'dev' ? 8080 : env === 'ci' ? 8090 : 8080;
+const URL = `http://localhost:${port}/`;
 let APIURL = '';
-
-const URL = 'http://localhost:8090/account/register';
+if (port === 8080) {
+  // dev
+  APIURL = localURL;
+}  else {
+  // aws or CI
+  APIURL = awsURL;
+}
 
 
 describe('Register user', () => {
   const newUsername = `newuser${Math.random()}@user.com`;
   it('default ui', () => {
     
-    cy.visit(URL);
+    cy.visit(URL + 'account/register');
 
     const currentServerPort = +window.location.port;
     if (currentServerPort === 8080) {
@@ -30,7 +37,7 @@ describe('Register user', () => {
   })
 
   it('must not be able to register new user with invalid username', () => {
-    cy.visit(URL);
+    cy.visit(URL + 'account/register');
 
     const input_username = cy.get('input[name="username"]');
     input_username.type(`newuser${Math.random()}`);
@@ -47,7 +54,7 @@ describe('Register user', () => {
   });
 
   it('must not be able to register new user with invalid password', () => {
-    cy.visit(URL);
+    cy.visit(URL + 'account/register');
 
     const input_username = cy.get('input[name="username"]');
     input_username.type(`newuser${Math.random()}@user.com`);
@@ -64,7 +71,7 @@ describe('Register user', () => {
   });
 
   it('cancel button should go to login page', () => {
-    cy.visit(URL);
+    cy.visit(URL + 'account/register');
 
     const input_cancel = cy.get('a[href="/account/login"]');
     input_cancel.click();
@@ -75,7 +82,7 @@ describe('Register user', () => {
   });
 
   it('must be able to register new user', () => {
-    cy.visit(URL);
+    cy.visit(URL + 'account/register');
 
     cy.intercept({
         method: 'POST',
@@ -98,7 +105,7 @@ describe('Register user', () => {
   });
 
   it('must not be able to register new user with existing username', () => {
-    cy.visit(URL);
+    cy.visit(URL + 'account/register');
     
     cy.intercept({
         method: 'POST',
