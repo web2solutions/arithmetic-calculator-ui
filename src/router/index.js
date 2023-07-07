@@ -7,6 +7,7 @@ import usersRoutes from './users.routes';
 import operationsRoutes from './operations.routes';
 import recordsRoutes from './records.routes';
 import create_operationRoutes from './create_operation.routes';
+import profileRoutes from './profile.routes';
 
 import { useUsersStore, useOperationsStore, useRecordsStore } from '@/stores';
 
@@ -17,6 +18,7 @@ export const router = createRouter({
     routes: [
         { path: '/', component: Home },
         { ...accountRoutes },
+        { ...profileRoutes },
         { ...usersRoutes },
         { ...create_operationRoutes },
         { ...operationsRoutes },
@@ -62,7 +64,10 @@ router.beforeEach(async (to, from) => {
             oldSize = oldQUery.size;
         }
         console.warn('==== setting paging vars')
-        const { page, size } = to.query;
+        const { page, size, filter } = to.query;
+        
+        if (filter) usersStore.filter = filter;
+
         if (!isNaN(page)) {
             usersStore.page = page;
         } else {
@@ -94,7 +99,9 @@ router.beforeEach(async (to, from) => {
             oldSize = oldQUery.size;
         }
         console.warn('==== setting paging vars')
-        const { page, size } = to.query;
+        const { page, size, filter } = to.query;
+        
+        if (filter) operationStore.filter = filter;
         if (!isNaN(page)) {
             operationStore.page = page;
         } else {
@@ -125,7 +132,9 @@ router.beforeEach(async (to, from) => {
             oldSize = oldQUery.size;
         }
         console.warn('==== setting paging vars')
-        const { page, size } = to.query;
+        const { page, size, filter } = to.query;
+        
+        if (filter) recordStore.filter = filter;
         if (!isNaN(page)) {
             recordStore.page = page;
         } else {

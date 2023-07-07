@@ -1,25 +1,20 @@
 <script setup>
 import { Form, Field } from 'vee-validate';
 import * as Yup from 'yup';
-import { useRoute } from 'vue-router';
+
 import { storeToRefs } from 'pinia';
 
-import { useUsersStore, useAlertStore } from '@/stores';
+import { useUsersStore, useAlertStore, useAuthStore } from '@/stores';
 import { router } from '@/router';
 
 const usersStore = useUsersStore();
+const authStore = useAuthStore();
 const alertStore = useAlertStore();
-const route = useRoute();
-const id = route.params.id;
 
-let title = 'Add User';
-let user = null;
-if (id) {
-    // edit mode
-    title = 'Edit User';
-    ({ user } = storeToRefs(usersStore));
-    usersStore.getById(id);
-}
+let { user } = storeToRefs(authStore)
+
+
+let title = 'My Profile';
 
 const schema = Yup.object().shape({
     username: Yup.string()
@@ -49,7 +44,7 @@ async function onSubmit(values) {
             message = 'User added';
         }
         console.log(router.currentRoute);
-        await router.push('/users');
+        await router.push('/');
         alertStore.success(message);
     } catch (error) {
         alertStore.error(error);

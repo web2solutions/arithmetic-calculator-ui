@@ -9,18 +9,21 @@ export const useRecordsStore = defineStore({
     state: () => ({
         records: {},
         record: {},
+        filter: false,
         page: 1,
         pageSize: 20,
         pageSizes: [5, 10, 15, 20, 50, 100],
         total: 0,
         numberOfPages: 0,
         pageTotalRecords: [1],
-        pages: []
+        pages: [],
+        selectedType: '',
     }),
     actions: {
         reset () {
             this.operations = {};
             this.operation = {};
+            this.filter = false;
             this.page = 1;
             this.pageSize = 20;
             this.pageSizes = [5, 10, 15, 20, 50, 100];
@@ -28,6 +31,7 @@ export const useRecordsStore = defineStore({
             this.numberOfPages = 0;
             this.pageTotalRecords = [1];
             this.pages = [];
+            this.selectedType = '';
         },
         setPaging (query) {
             const { page, size } = query;
@@ -71,13 +75,14 @@ export const useRecordsStore = defineStore({
         async getAll() {
             const page = this.page;
             const size = this.pageSize
+            const filter = this.filter;
             this.records = { loading: true };
             try {
                 const {
                     data,
                     code,
                     message
-                } = await session.get('records', { page, size });
+                } = await session.get('records', { page, size }, filter);
                 if ((code === 200 || code === 0) && data) {
                     const { result, page, size, total } = data;
                     this.page = +page;

@@ -1,10 +1,22 @@
 <script setup>
+// import { Form, Field } from 'vee-validate';
+// import * as Yup from 'yup';
+import { ToolbarCrudRecord } from '@/components';
 import { storeToRefs } from 'pinia';
 import { router } from '@/router';
-import { useRecordsStore } from '@/stores';
+import { useRecordsStore, useOperationsStore } from '@/stores';
+
+/* const schema = Yup.object().shape({
+    operation_id: Yup.array()
+        .required('Operation is required'),
+        //.required('Number 2 is required'),
+}); */
 
 const recordsStore = useRecordsStore();
+const operationsStore = useOperationsStore();
 const { records } = storeToRefs(recordsStore);
+// const { operations } = storeToRefs(operationsStore);
+operationsStore.getAll();
 
 function onChangePageSize (event) {
     const previousPage = router.currentRoute._value.query.page || false;
@@ -30,17 +42,22 @@ function onChangePageNumber (event) {
     if (previousSize) query.size = previousSize;
     router.push({ path: '/records', query })
 }
+
+/* function onSelectType() {
+    
+} */
 </script>
 
 <template>
-    <h1>Calculated operations</h1>
-    <router-link to="/records/add" class="btn btn-sm btn-success mb-2">Add new calculation</router-link>
+    <ToolbarCrudRecord />
     <table class="table table-striped">
         <thead>
             <tr>
                 <th style="width: 20%">User</th>
                 <th style="width: 10%">User input</th>
-                <th style="width: 20%">Operation</th>
+                <th style="width: 20%">
+                    Operation
+                </th>
                 <th style="width: 10%">Result</th>
                 <th style="width: 10%">Amount</th>
                 <th style="width: 50%">Date</th>
