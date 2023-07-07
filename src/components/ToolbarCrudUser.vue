@@ -17,47 +17,31 @@ const html = `
 `;
 
 async function onClickOpenSearch() {
-    const { isConfirmed, isDismissed } = await Swal.fire({
-
-        // icon: 'success',
+    const { isConfirmed } = await Swal.fire({
         title: 'User search',
         html,
-        // text: 'Do you want to continue',
         confirmButtonText: 'search',
         showCancelButton: true,
         customClass: {
             confirmButton: 'btn btn-sm btn-success mb-2',
             cancelButton: 'btn btn-sm mb-2',
         }
-    })
-    console.log({ isConfirmed, isDismissed })
-
+    });
     if (isConfirmed) {
         useUsersStore.user = { loading: true };
-        // do search
-        // const previousPage = router.currentRoute._value.query.page || false;
-        // const previousSize = router.currentRoute._value.query.size || false;
         const username = document.getElementById('search_username').value;
         const admin = document.getElementById('search_admin').value;
         console.log({ username, admin })
         const query = {
-            // size: +event.target.value
             filter: {},
         };
-        // if (previousPage) query.page = previousPage;
-        // if (previousSize) query.size = previousSize;
+
         if (username && username !== '') query.filter['username'] = username
         if (admin && admin !== '') query.filter['admin'] = admin === 'true' ? true : false;
 
         const safe = {
             filter: window.btoa(JSON.stringify({ ...query.filter })),
         };
-
-        // Buffer.from('Hello World!').toString('base64')
-
-        // useUsersStore.filter = window.btoa(JSON.stringify({ ...query.filter }));
-
-        console.log(query, safe)
         
         router.push({ path: '/users', query: safe })
     }

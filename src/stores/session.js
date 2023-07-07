@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
-// const localURL = 'http://localhost:3000/dev';
-const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
+const localURL = 'http://localhost:3000/dev';
+// const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 
 const Toast = Swal.mixin({
@@ -97,12 +97,10 @@ class Session {
                 text: error.message,
                 // confirmButtonText: 'Cool',
             })
-            console.log('error', error.message);
             throw error;
         }
     }
     async logout(username, token) {
-        console.log('LOGOUT >>>>>>>>', { username, token });
         try {
             const response = await fetch(`${this._apiURL}/users/logout`, {
                 method: 'POST',
@@ -137,7 +135,6 @@ class Session {
                 text: error.message,
                 // confirmButtonText: 'Cool',
             });
-            console.log('error XXXXXXXXX', error.message);
             throw error;
         }
     }
@@ -155,10 +152,6 @@ class Session {
     }
 
     async 'get'(endPoint, paging = {}, filter = false) {
-        // const safe = {
-        //    filter: window.btoa(JSON.stringify({ ...query.filter })),
-        //};
-
         const { page, size } = paging;
         try {
             let url = `${this._apiURL}/${endPoint}`;
@@ -171,7 +164,6 @@ class Session {
             if (filter) {
                 url += `&filter=${filter}`
             }
-            console.log(url, this._headers_private)
             const response = await fetch(url, {
                 method: 'GET',
                 headers: this._headers_private,
@@ -193,7 +185,6 @@ class Session {
                 message
             }
         } catch (error) {
-            console.log('error', error.message);
             Toast.fire({
                 icon: 'error',
                 title: 'Error',
@@ -207,7 +198,6 @@ class Session {
     async 'post'(endPoint = '', payload = {}) {
         try {
             const url = `${this._apiURL}/${endPoint}`;
-            console.log(url)
             const response = await fetch(url, {
                 method: 'POST',
                 headers: this._headers_private,
@@ -219,12 +209,6 @@ class Session {
                 code,
                 message
             } = await response.json();
-            console.log( {
-                data,
-                code,
-                message,
-                response
-            })
             if(response.status >= 400 && response.status <= 500) {
                 throw new Error(message);
             }
@@ -235,7 +219,6 @@ class Session {
                 message
             }
         } catch (error) {
-            console.log('error', error.message);
             Toast.fire({
                 icon: 'error',
                 title: 'Error',
@@ -249,7 +232,6 @@ class Session {
     async 'put'(endPoint = '', payload = {}) {
         try {
             const url = `${this._apiURL}/${endPoint}`;
-            console.log(url)
             const response = await fetch(url, {
                 method: 'PUT',
                 headers: this._headers_private,
@@ -277,7 +259,6 @@ class Session {
                 text: error.message,
                 // confirmButtonText: 'Cool',
             });
-            console.log('error', error.message);
             throw error;
         }
     }
@@ -285,7 +266,6 @@ class Session {
     async 'delete'(endPoint = '') {
         try {
             const url = `${this._apiURL}/${endPoint}`;
-            console.log(url)
             const response = await fetch(url, {
                 method: 'DELETE',
                 headers: this._headers_private,
@@ -306,7 +286,6 @@ class Session {
                 message
             }
         } catch (error) {
-            console.log('error', error.message);
             Toast.fire({
                 icon: 'error',
                 title: 'Error',
@@ -321,7 +300,6 @@ class Session {
 let session = false;
 export const getSession = function () {
     if (!session) {
-        console.info('creating session');
         session = new Session();
     }
     return session;
