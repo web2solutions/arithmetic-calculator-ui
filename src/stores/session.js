@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
-// const localURL = 'http://localhost:3000/dev';
-const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
+const localURL = 'http://localhost:3000/dev';
+// const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 
 const Toast = Swal.mixin({
@@ -19,16 +19,14 @@ const Toast = Swal.mixin({
 class Session {
     
     constructor() {
-        console.log('process.env.NODE_ENV', process.env.NODE_ENV)
-        const env = process.env.NODE_ENV || 'dev';
-        if (env === 'dev' || env === '' || env === 'development') {
+        const currentServerPort = +window.location.port;
+        if (currentServerPort === 8080) {
+            // dev
             this._apiURL = localURL;
-        } else {
-            // CI
-            this._apiURL = awsURL
+        }  else {
+            // aws or CI
+            this._apiURL = awsURL;
         }
-        console.log(process.env.NODE_ENV)
-        console.log('SESSION', this._apiURL)
         this._user = false;
         this.setPublicHeaders();
         this.setPrivateHeaders();

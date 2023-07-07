@@ -1,21 +1,26 @@
 /*global cy describe, it, assert */
 
-const localURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
+const localURL = 'http://localhost:3000/dev';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
 
-const env = process.env.NODE_ENV || 'dev';
 let APIURL = '';
-
-if (env === 'dev' || env === '' || env === 'development') {
-  APIURL  = localURL;
-} else {
-  APIURL  = awsURL
-}
 
 describe('Users CRUD', () => {
 
     it('Users Listing UI', () => {
+
+        cy.visit('http://localhost:8090/account/login');
+        
+        const currentServerPort = +window.location.port;
+        if (currentServerPort === 8080) {
+        // dev
+        APIURL = localURL;
+        }  else {
+        // aws or CI
+        APIURL = awsURL;
+        }
         console.log(APIURL);
+
         cy.intercept({
             method: 'POST',
             url: `${APIURL}/users/login`, // that have a URL that matches '/users/*'
@@ -46,9 +51,6 @@ describe('Users CRUD', () => {
             url: `${APIURL}/users/*`, // that have a URL that matches '/users/*'
         }).as('delUser');
 
-
-        cy.visit('http://localhost:8080/account/login');
-
         const input_username = cy.get('input[name="username"]');
         input_username.type('admin@admin.com');
         const input_password = cy.get('input[name="password"]');
@@ -65,7 +67,7 @@ describe('Users CRUD', () => {
             assert(!!data.username, 'valid user data');
         });
 
-        cy.visit('http://localhost:8080/users');
+        cy.visit('http://localhost:8090/users');
         cy.wait(300);
 
         const title = cy.get('h1');
