@@ -97,13 +97,10 @@ async function changePhoto() {
             </ul>
             <form onsubmit="return false;" class="form-inline my-2 my-lg-0 logout">
                 <button @click="authStore.logout()" class="btn btn-link nav-item nav-link">Logout</button>
-                <div v-if="authStore.user.photo.toString().indexOf('base64') > -1" class="circular-portrait">
-                    <img @click="changePhoto" class="photo" :src="authStore.user.photo" :alt="authStore.user?.username" :title="authStore.user?.username" />
+                <div v-if="authStore.user" class="circular-portrait">
+                    <img v-if="authStore.user.photo == null && authStore.user.photo !== ''" @click="changePhoto" class="photo" :src="authStore.user.photo" :alt="authStore.user?.username" :title="authStore.user?.username" />
+                    <img v-else @click="changePhoto" class="photo" src="http://localhost:8080/selfie.png" :alt="authStore.user?.username" :title="authStore.user?.username" />
                 </div>
-                <div v-else class="circular-portrait">
-                    <img @click="changePhoto" class="photo" src="http://localhost:8080/selfie.png" :alt="authStore.user?.username" :title="authStore.user?.username" />
-                </div>
-                
             </form>
         </div>
 
