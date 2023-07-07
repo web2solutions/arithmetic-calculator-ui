@@ -9,6 +9,7 @@ export const useOperationsStore = defineStore({
     state: () => ({
         operations: {},
         operation: {},
+        filter: false,
         page: 1,
         pageSize: 20,
         pageSizes: [5, 10, 15, 20, 50, 100],
@@ -21,6 +22,7 @@ export const useOperationsStore = defineStore({
         reset () {
             this.operations = {};
             this.operation = {};
+            this.filter = false;
             this.page = 1;
             this.pageSize = 20;
             this.pageSizes = [5, 10, 15, 20, 50, 100];
@@ -67,12 +69,13 @@ export const useOperationsStore = defineStore({
             const page = this.page;
             const size = this.pageSize
             this.operations = { loading: true };
+            const filter = this.filter;
             try {
                 const {
                     data,
                     code,
                     message
-                } = await session.get('operations', { page, size });
+                } = await session.get('operations', { page, size }, filter);
                 if ((code === 200 || code === 0) && data) {
                     const { result, page, size, total } = data;
                     this.page = +page;

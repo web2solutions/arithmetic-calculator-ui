@@ -16,7 +16,7 @@ const { user } = storeToRefs(authStore);
         <p><router-link to="/records">See all my calculations</router-link></p>
         <p><router-link to="/records/add">Add new calculation</router-link></p>
 
-        <p><router-link :to="'/users/edit/' + user._id">Manage my profile</router-link></p>
+        <p><router-link to="/profile">Manage my profile</router-link></p>
 
         <p><router-link v-if="user.admin" to="/create_operation">New operation</router-link></p>
     </div>

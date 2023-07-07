@@ -1,8 +1,9 @@
 <template>
-    <div class="p-4">
-        <div class="container">
-            <router-view />
-        </div>
+    <div class="container">
+        <router-view />
     </div>
 </template>
+<style>
+@import '@/assets/layout.css';
+</style>
 

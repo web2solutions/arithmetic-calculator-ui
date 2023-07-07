@@ -1,14 +1,29 @@
 import { defineStore } from 'pinia';
+import Swal from 'sweetalert2';
 import { getSession } from './session';
 import { useAuthStore } from '@/stores';
 import { useAlertStore } from '@/stores';
+
 const session = getSession();
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    },
+})
 
 export const useUsersStore = defineStore({
     id: 'users',
     state: () => ({
         users: {},
         user: {},
+        filter: false,
         page: 1,
         pageSize: 20,
         pageSizes: [5, 10, 15, 20, 50, 100],
@@ -21,6 +36,7 @@ export const useUsersStore = defineStore({
         reset () {
             this.operations = {};
             this.operation = {};
+            this.filter = false;
             this.page = 1;
             this.pageSize = 20;
             this.pageSizes = [5, 10, 15, 20, 50, 100];
@@ -52,11 +68,11 @@ export const useUsersStore = defineStore({
                 }
             } catch (error) {
                 // error.message
-								// Not Found, Unauthorized
-								const alertStore = useAlertStore();
+				// Not Found, Unauthorized
+				const alertStore = useAlertStore();
                 alertStore.error(error.message); 
                 this.user = { error };
-								throw error;
+				throw error;
             }
         },
         async create(user) {
@@ -70,6 +86,7 @@ export const useUsersStore = defineStore({
                     if (isNaN(this.users.length)) {
                         this.users = [];
                     }
+                    delete data.password;
                     this.users.push(data);
                 } else {
                     throw new Error(message);
@@ -86,14 +103,15 @@ export const useUsersStore = defineStore({
         },
         async getAll() {
             const page = this.page;
-            const size = this.pageSize
+            const size = this.pageSize;
+            const filter = this.filter;
             this.users = { loading: true };
             try {
                 const {
                     data,
                     code,
                     message
-                } = await session.get('users', { page, size });
+                } = await session.get('users', { page, size }, filter);
                 if ((code === 200 || code === 0) && data) {
                     const { result, page, size, total } = data;
                     this.page = +page;
@@ -126,6 +144,7 @@ export const useUsersStore = defineStore({
                     message
                 } = await session.get(`users/${id}`);
                 if ((code === 200 || code === 0) && data) {
+                    delete data.password;
                     this.user = data;
                 } else {
                     throw new Error(message);
@@ -142,7 +161,8 @@ export const useUsersStore = defineStore({
 
         async update(id, params) {
             if(params.status === 'active') {
-                this.users.find(x => x.id === id).isRestoring = true;
+                if(this.users.find)
+                    this.users.find(x => x.id === id).isRestoring = true;
             }
             try {
                 const {
@@ -151,19 +171,30 @@ export const useUsersStore = defineStore({
                     message
                 } = await session.put(`users/${id}`, params);
                 if ((code === 200 || code === 0) && data) {
-                    if(params.status === 'active') {
-                        this.users.find(x => x.id === id).status = 'active';
-                        this.users.find(x => x.id === id).isRestoring = false;
-                    }
-                    this.users = this.users.map(user =>{
-                        if(user.id === id) {
-                            return { ...user, ...data, token: session.token };
+                    delete data.password;
+                    if (this.users.find) {
+                        if(params.status === 'active') {
+                            this.users.find(x => x.id === id).status = 'active';
+                            this.users.find(x => x.id === id).isRestoring = false;
                         }
-                        return user;
-                    });
+                        this.users = this.users.map(user =>{
+                            if(user.id === id) {
+                                return { ...user, ...data, token: session.token };
+                            }
+                            return user;
+                        });
+                    }
+                    
                     // update stored user if the logged in user updated their own record
                     const authStore = useAuthStore();
                     if (id === authStore.user.id) {
+                        
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Info',
+                            text: 'Profile saved',
+                            // confirmButtonText: 'Cool',
+                        });
                         // update local storage
                         const user = { ...authStore.user, ...params, token: session.token };
                         localStorage.setItem('user', JSON.stringify(user));

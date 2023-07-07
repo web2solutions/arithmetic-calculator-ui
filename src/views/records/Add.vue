@@ -15,35 +15,21 @@ const { operations } = storeToRefs(operationsStore);
 operationsStore.getAll()
 
 let title = 'Add Operation';
-let record = null;
-let selectedType = '';
-
+let { record } = storeToRefs(recordsStore);
 
 function getSelectedType () {
-    return selectedType;
+    return recordsStore.selectedType;
 }
 
 const schema = Yup.object().shape({
-    entry1: Yup
-        .number()
-        .required('Number 1 is required'),
     operation_id: Yup.array()
-        .required('Operation is required'),
-    entry2: Yup.string()
-        .transform(x => isNaN(x) ? undefined : x)
-        .concat(
-            (
-                getSelectedType() === 'square_root' || getSelectedType() === 'random_string'
-            )
-            ? null : Yup.string().required('Number 2 is required')
-        )
-        //.required('Number 2 is required'),
+        .required('Operation is required'),    
 });
 
 function onSelectType (event) {
     console.log(event.target.value)
     const type = event.target.value.split(',')[1];
-    selectedType = type;
+    recordsStore.selectedType = type;
 }
 
 async function onSubmit(values) {
@@ -54,9 +40,23 @@ async function onSubmit(values) {
         // return;
         let user_input_numbers = [entry1, entry2];
         if (type === 'square_root') {
+            if(!entry1 || entry1 === '') {
+                alertStore.error('Number 1 is mandatory on this kind of operation')
+                return;
+            }
             user_input_numbers = [entry1]
         } else  if (type === 'random_string') {
             user_input_numbers = []
+        } else {
+            if(!entry1 || entry1 === '') {
+                alertStore.error('Number 1 is mandatory on this kind of operation')
+                return;
+            }
+            // check number 2
+            if(!entry2 || entry2 === '') {
+                alertStore.error('Number 2 is mandatory on this kind of operation')
+                return;
+            }
         }
         // 
         const payload = {

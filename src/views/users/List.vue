@@ -1,5 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia';
+import { ToolbarCrudUser } from '@/components';
 import { router } from '@/router';
 import { useUsersStore } from '@/stores';
 
@@ -8,12 +9,14 @@ const { users } = storeToRefs(usersStore);
 
 function onChangePageSize (event) {
     const previousPage = router.currentRoute._value.query.page || false;
+    const previousFilter = router.currentRoute._value.query.filter || false;
     const query = {
         size: +event.target.value
     };
     if(event.target.value === '') {
         delete query.size;
     }
+    if (previousFilter) query.filter = previousFilter
     if (previousPage) query.page = previousPage;
     router.push({ path: '/users', query: query })
 }
@@ -21,20 +24,21 @@ function onChangePageSize (event) {
 function onChangePageNumber (event) {
     
     const previousSize = router.currentRoute._value.query.size || false;
+    const previousFilter = router.currentRoute._value.query.filter || false;
     const query = {
         page: +event.target.value,
     };
     if(event.target.value === '') {
         delete query.page;
     }
+    if (previousFilter) query.filter = previousFilter
     if (previousSize) query.size = previousSize;
     router.push({ path: '/users', query })
 }
 </script>
 
 <template>
-    <h1>Users</h1>
-    <router-link to="/users/add" class="btn btn-sm btn-success mb-2">Add User</router-link>
+    <ToolbarCrudUser />
     <table class="table table-striped">
         <thead>
             <tr>
