@@ -8,19 +8,20 @@
     "main": "server.js",
     "scripts": {
         "dev": "vite",
-        "start": "npm run build && node server.js",
+        "test": "node e2e.local.js",
+        "start": "npm run build && NODE_ENV=dev node server.js",
         "start:ci": "npm run build:ci && NODE_ENV=ci node server.js",
-        "build": "npm run clean && NODE_ENV=test vite build --mode production",
+        "build": "npm run clean && NODE_ENV=production vite build --mode production",
         "build:dev": "npm run clean && NODE_ENV=dev vite build --mode production",
         "build:ci": "npm run clean && NODE_ENV=ci vite build --mode production",
         "clean": "rm -rf ./dist",
         "preview": "vite preview --port 5050",
         "lint": "eslint . --ext .vue,.js --fix --ignore-path .gitignore",
-        "cypress:open": "cypress open",
+        "cypress:open": "CYPRESS_NODE_ENV=dev cypress open",
         "cy:run": "cypress run  --browser chrome --spec \"cypress/e2e/*\"",
-        "e2e": "npm run build && node server.js && wait-on http://localhost:8080 && NODE_ENV=dev npm run cy:run",
-        "e2e:ci": "NODE_ENV=ci cypress run --env NODE_ENV=ci --browser chrome --spec \"cypress/e2e/*\"",
-        "e2e:dev": "npm run dev && wait-on http://localhost:8080 && NODE_ENV=dev npm run cy:run"
+        "e2e": "CYPRESS_NODE_ENV=dev npx cypress run --browser chrome --spec \"cypress/e2e/*\"",
+        "e2e:ci": "CYPRESS_NODE_ENV=ci npx cypress run --browser chrome --spec \"cypress/e2e/*\"",
+        "e2e:dev": "npm start & npx wait-on http://localhost:8080/ && npm run e2e"
     },
     "dependencies": {
         "chart.js": "^4.3.0",
@@ -33,6 +34,7 @@
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^2.3.1",
+        "chalk": "^4.1.2",
         "cypress": "^12.16.0",
         "dotenv": "^16.3.1",
         "eslint": "^8.5.0",

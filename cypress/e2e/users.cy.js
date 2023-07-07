@@ -1,15 +1,24 @@
-/*global cy describe, it, assert */
+/*global cy describe, it, assert, Cypress */
 
+const env = Cypress.env('NODE_ENV');
 const localURL = 'http://localhost:3000/dev';
 const awsURL = 'https://je6x0x8fa6.execute-api.us-east-2.amazonaws.com/test';
-
+const port = env === 'dev' ? 8080 : env === 'ci' ? 8090 : 8080;
+const URL = `http://localhost:${port}/`;
 let APIURL = '';
+if (port === 8080) {
+  // dev
+  APIURL = localURL;
+}  else {
+  // aws or CI
+  APIURL = awsURL;
+}
 
 describe('Users CRUD', () => {
 
     it('Users Listing UI', () => {
 
-        cy.visit('http://localhost:8090/account/login');
+        cy.visit(`${URL}account/login`);
         
         const currentServerPort = +window.location.port;
         if (currentServerPort === 8080) {
@@ -67,7 +76,7 @@ describe('Users CRUD', () => {
             assert(!!data.username, 'valid user data');
         });
 
-        cy.visit('http://localhost:8090/users');
+        cy.visit(`${URL}users`);
         cy.wait(300);
 
         const title = cy.get('h1');
