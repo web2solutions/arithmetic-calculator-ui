@@ -6,7 +6,7 @@ const env = process.env.NODE_ENV;
 
 const port = env === 'ci' ? 8090 : env === 'dev' ? 8080 : 8080;
 
-app.use('*', express.static('dist/index.html'))
+app.use('/', express.static('dist'))
 app.use('/account/register', express.static('dist/index.html'))
 app.use('/account/register', express.static('dist/index.html'))
 app.use('/account/login', express.static('dist/index.html'))
