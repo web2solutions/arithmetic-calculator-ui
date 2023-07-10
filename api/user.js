@@ -1,3 +1,6 @@
 export default function handler(req, res) {
-    res.status(200).json({ name: 'John Doe' })
+    const { name = 'World' } = req.query
+    return res.status(200).json({
+        message: `Hello ${name}!`,
+    })
 }
