@@ -9,9 +9,9 @@ export const useAuthStore = defineStore({
     id: 'auth',
     state: () => ({
         // initialize state from local storage to enable user to stay logged in
-        user: session.user || JSON.parse(localStorage.getItem('user')),
+        user: session.user,
         returnUrl: null,
-        isAdmin: session.user.admin || ( JSON.parse(localStorage.getItem('isAdmin')) || false ),
+        isAdmin: session.user ? session.user.admin ? true : false : false,
         showProfileMenu: false,
     }),
     actions: {
@@ -24,15 +24,7 @@ export const useAuthStore = defineStore({
                     // console.log(user);
                     delete user.password;
                     this.user = user;
-                    if(this.user.admin) {
-                        this.isAdmin = true;
-                        localStorage.setItem('isAdmin', JSON.stringify(true));
-                    } else {
-                        localStorage.setItem('isAdmin', JSON.stringify(false));
-                    }
-                    // store user details and jwt in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('user', JSON.stringify(user));
-                    
+                    this.isAdmin = user.admin;
                     router.push(this.returnUrl || '/');
                 }
             } catch (error) {
@@ -40,34 +32,23 @@ export const useAuthStore = defineStore({
                 alertStore.error(error);                
             }
         },
-        async logout() {
-            // console.log(this.user);
-            const { username, token } = this.user;
-            try {
-                await session.logout(username, token);
-                this.user = null;
-                this.isAdmin = false;
-                localStorage.removeItem('user');
-                localStorage.removeItem('isAdmin');
-                
+        logout() {
+            console.log(this.user);
+            // const { username, token } = this.user;
+            session.logout();
+            this.user = null;
+            this.isAdmin = false;
 
-                // const alertStore = useAlertStore();
-                const usersStore = useUsersStore();
-                usersStore.reset()
-                const recordsStore = useRecordsStore();
-                recordsStore.reset();
-                const operationsStore = useOperationsStore();
-                operationsStore.reset();
-                
-
-                router.push('/account/login');
-
-                // alertStore.success('Logged out');       
-            } catch (error) {
-                console.log(error)
-                const alertStore = useAlertStore();
-                alertStore.error(error);    
-            }
+            // const alertStore = useAlertStore();
+            const usersStore = useUsersStore();
+            usersStore.reset()
+            const recordsStore = useRecordsStore();
+            recordsStore.reset();
+            const operationsStore = useOperationsStore();
+            operationsStore.reset();
+            this.user = null;
+            this.isAdmin = false;
+            router.push('/account/login');
         }
     }
 });
