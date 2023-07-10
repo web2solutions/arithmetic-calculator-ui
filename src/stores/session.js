@@ -29,7 +29,62 @@ class Session {
         }
         this._user = false;
         this.setPublicHeaders();
-        this.setPrivateHeaders();
+        
+        const localToken = this.getLocalToken();
+        const userLstorage = localStorage.getItem('user');
+        console.log('userLstorage', userLstorage)
+        console.log('token', localToken)
+        if (userLstorage && localToken !== '') {
+            const user = JSON.parse(userLstorage);
+            this._user = user;
+            this.setPrivateHeaders(localToken);
+        }
+        console.log('create session')
+    }
+
+    setLocalToken(token, exhours = 1) {
+        const d = new Date();
+        d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
+        let expires = d.toUTCString();
+        const atts = [
+            `token=${token}`,
+            `expires=${expires}`,
+            `domain=${window.location.hostname}`,
+            `path=/`,
+        ];
+        if (window.location.protocol === 'https:') {
+            atts.push('secure');
+            atts.push('HttpOnly');
+        }
+        console.log(atts.join(';'));
+        document.cookie = atts.join(';'); // //  secure; HttpOnly
+    }
+
+    deleteLocalToken() {
+        const atts = [
+            `token=`,
+            `expires=Thu, 01 Jan 1970 00:00:00 UTC`,
+            `domain=${window.location.hostname}`,
+            `path=/`,
+        ];
+        console.log(atts.join(';'));
+        document.cookie = atts.join(';'); // //  secure; HttpOnly
+    }
+
+    getLocalToken() {
+        let name = "token=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
     }
 
     setPublicHeaders () {
@@ -44,20 +99,10 @@ class Session {
         }
     }
 
-    setPrivateHeaders (user) {
+    setPrivateHeaders (token) {
         this._headers_private = new Headers();
         this._headers_private.append('Content-Type', 'application/json');
-        if (user) {
-            this._user = user;
-            this._headers_private.append('Authorization', `Bearer ${user.token}`);
-            return;
-        }
-        const userLstorage = localStorage.getItem('user');
-        if (userLstorage) {
-            const user = JSON.parse(userLstorage);
-            this._user = user;
-            this._headers_private.append('Authorization', `Bearer ${user.token}`)
-        }
+        this._headers_private.append('Authorization', `Bearer ${token}`);
     }
 
     async login(username, password) {
@@ -77,7 +122,15 @@ class Session {
                 message
             } = await response.json();
             if ((code === 200 || code === 0) && data) {
-                this.setPrivateHeaders(data);
+                const token = '' + data.token;
+                delete data.token;
+                delete data.password;
+                this._user = { ...data };
+                localStorage.setItem('isAdmin', JSON.stringify(this._user.admin));
+                localStorage.setItem('user', JSON.stringify(this._user));
+                // data.token
+                this.setLocalToken(token);
+                this.setPrivateHeaders(token);
                 Toast.fire({
                     icon: 'success',
                     title: 'Signed in successfully',
@@ -98,8 +151,15 @@ class Session {
             throw error;
         }
     }
-    async logout(username, token) {
+    async logout() {
+        const username = this.user.username;
+        const  token = this.getLocalToken();
         try {
+            this._user = false;
+            localStorage.removeItem('user');
+            localStorage.removeItem('isAdmin');
+            this.deleteLocalToken();
+            this._headers_private = new Headers();
             const response = await fetch(`${this._apiURL}/users/logout`, {
                 method: 'POST',
                 headers: this._headers_public,
@@ -114,8 +174,6 @@ class Session {
                 message
             } = await response.json();
             if ((code === 200 || code === 401 || code === 0)) {
-                this._user = false;
-                this._headers_private = new Headers();
                 Toast.fire({
                     icon: 'success',
                     title: 'Signed out successfully',

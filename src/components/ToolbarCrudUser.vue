@@ -36,7 +36,7 @@ async function onClickOpenSearch() {
             filter: {},
         };
 
-        if (username && username !== '') query.filter['username'] = username
+        if (username && username !== '') query.filter['username'] = { "$regex": username, "$options": "i" }; // { "$regex": "Alex", "$options": "i" }
         if (admin && admin !== '') query.filter['admin'] = admin === 'true' ? true : false;
 
         const safe = {
