@@ -54,7 +54,7 @@ class Session {
         ];
         if (window.location.protocol === 'https:') {
             atts.push('secure');
-            atts.push('HttpOnly');
+            // atts.push('HttpOnly');
         }
         console.log(atts.join(';'));
         document.cookie = atts.join(';'); // //  secure; HttpOnly

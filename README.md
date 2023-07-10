@@ -80,3 +80,10 @@ Now in another terminal session, run:
 ```bash
 npm run cypress:open
 ```
+
+
+## Project Tech Debits
+
+1. Implement backend for frontend (BFF) using vercel functions.
+2. Generate cookie that stores the API token via BFF.
+3. Search records.
