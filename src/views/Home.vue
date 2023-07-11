@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia';
 import Chart from 'chart.js/auto'
 
@@ -28,7 +28,7 @@ function buildChart1() {
         // r.operation_id
         mapCount[r.operation_id._id] += 1
     })
-    console.log(mapTypes, mapCount)
+    // console.log(mapTypes, mapCount)
     
     chart1 = new Chart(ctx, {
         type: 'bar',
@@ -57,7 +57,7 @@ function buildChart2() {
         // r.operation_id
         mapCount[r.operation_id._id] += r.operation_id.cost
     })
-    console.log(mapTypes, mapCount)
+    // console.log(mapTypes, mapCount)
     
     chart2 = new Chart(ctx, {
         type: 'bar',
@@ -84,7 +84,7 @@ function buildChart3() {
         mapTypes[userType] += 1
     }
     
-    console.log(mapTypes)
+    // console.log(mapTypes)
     
     chart3 = new Chart(ctx, {
         type: 'bar',
@@ -113,7 +113,7 @@ function buildChart4() {
         // r.operation_id
         mapCount[r.user_id._id] += r.operation_id.cost
     })
-    console.log(mapUsers, mapCount)
+    // console.log(mapUsers, mapCount)
     
     chart4 = new Chart(ctx, {
         type: 'doughnut',
@@ -152,8 +152,8 @@ onBeforeUnmount(() => {
 
 onMounted(() => {
     // el.value // <div>
-        (async () => {
-            if(user.admin) {
+        if(user._object.isAdmin) {
+            (async () => {
                 await operationsStore.getAll();
                 recordsStore.pageSize = 99999999; // max number or records
                 await recordsStore.getAll();
@@ -165,47 +165,46 @@ onMounted(() => {
                     buildChart3();
                     buildChart4();
                 }, 500);
-            }
-            
-        })();
-    })
+            })();
+        }})
+        
+    </script>
     
-</script>
-
-<template>
-    <div v-if="user">
-        <div class="container-fluid">
-            <div class="d-flex p-2 mb-2">
-                <div class="order-1 mr-2 border">
-                    <h1>Hi {{user.username}}!</h1>
-                    <p>You're logged as {{user.admin ? 'admin' : 'user'}}.</p>
-                    <p><router-link v-if="user.admin" to="/users">Manage Users</router-link></p>
-                    <p><router-link v-if="user.admin" to="/operations">Manage Operations</router-link></p>
-                    <p><router-link to="/records">See all my calculations</router-link></p>
-                    <p><router-link to="/records/add">Add new calculation</router-link></p>
-                    
-                    <p><router-link to="/profile">Manage my profile</router-link></p>
-                    
-                    <!-- <p><router-link v-if="user.admin" to="/create_operation">New Calcultator UI - POC only</router-link></p> -->
+    <template>
+        <div v-if="user">
+            <div class="container-fluid">
+                <div class="d-flex p-2 mb-2">
+                    <div class="order-1 mr-2 border">
+                        <h1>Hi {{user.username}}!</h1>
+                        <p>You're logged as {{user.admin ? 'admin' : 'user'}}.</p>
+                        <p><router-link v-if="user.admin" to="/users">Manage Users</router-link></p>
+                        <p><router-link v-if="user.admin" to="/operations">Manage Operations</router-link></p>
+                        <p><router-link to="/records">See all my calculations</router-link></p>
+                        <p><router-link to="/records/add">Add new calculation</router-link></p>
+                        
+                        <p><router-link to="/profile">Manage my profile</router-link></p>
+                        
+                        <!-- <p><router-link v-if="user.admin" to="/create_operation">New Calcultator UI - POC only</router-link></p> -->
+                    </div>
+                    <div v-if="user.admin" class="order-2 mr-2 border">
+                        <canvas id="myChart1" style="height: 30vh;"></canvas>
+                    </div>
+                    <div v-if="user.admin" class="order-3 mr-2 border">
+                        <canvas id="myChart2" style="height: 30vh;"></canvas>
+                    </div>
                 </div>
-                <div v-if="user.admin" class="order-2 mr-2 border">
-                    <canvas id="myChart1" style="height: 30vh;"></canvas>
-                </div>
-                <div v-if="user.admin" class="order-3 mr-2 border">
-                    <canvas id="myChart2" style="height: 30vh;"></canvas>
-                </div>
-            </div>
-            <div class="d-flex p-2 mb-2">
-                <div v-if="user.admin" class="order-1 mr-2 border">
-                    <canvas id="myChart3" style="height: 30vh;"></canvas>
-                </div>
-                <div v-if="user.admin" class="order-2 mr-2 border">
-                    <canvas id="myChart4" style="height: 15vh;"></canvas>
-                </div>
-                <div v-if="user.admin" class="order-3 mr-2 border">
-                    <canvas id="myChart5" style="height: 25vh;"></canvas>
+                <div class="d-flex p-2 mb-2">
+                    <div v-if="user.admin" class="order-1 mr-2 border">
+                        <canvas id="myChart3" style="height: 30vh;"></canvas>
+                    </div>
+                    <div v-if="user.admin" class="order-2 mr-2 border">
+                        <canvas id="myChart4" style="height: 15vh;"></canvas>
+                    </div>
+                    <div v-if="user.admin" class="order-3 mr-2 border">
+                        <canvas id="myChart5" style="height: 25vh;"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</template>
+    </template>
+    
