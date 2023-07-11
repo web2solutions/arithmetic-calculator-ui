@@ -67,10 +67,16 @@ npm test
 
 ## Run e2e through opening Cypress
 
-Build and serve the SPA through the 8080 port using express.
+Build and serve the SPA through the 8080 port using express and your local Node.js install.
 
 ```bash
 npm start
+```
+
+Or through Docker:
+
+```bash
+npm run docker:compose
 ```
 
 You can check the app at: <http://localhost:8080/>
