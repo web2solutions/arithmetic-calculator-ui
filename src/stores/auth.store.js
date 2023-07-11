@@ -33,22 +33,27 @@ export const useAuthStore = defineStore({
             }
         },
         logout() {
-            console.log(this.user);
-            // const { username, token } = this.user;
-            session.logout();
-            this.user = null;
-            this.isAdmin = false;
+            try{
+                console.log(this.user);
+                // const { username, token } = this.user;
+                session.logout();
+                this.user = null;
+                this.isAdmin = false;
 
-            // const alertStore = useAlertStore();
-            const usersStore = useUsersStore();
-            usersStore.reset()
-            const recordsStore = useRecordsStore();
-            recordsStore.reset();
-            const operationsStore = useOperationsStore();
-            operationsStore.reset();
-            this.user = null;
-            this.isAdmin = false;
-            router.push('/account/login');
+                // const alertStore = useAlertStore();
+                const usersStore = useUsersStore();
+                usersStore.reset()
+                const recordsStore = useRecordsStore();
+                recordsStore.reset();
+                const operationsStore = useOperationsStore();
+                operationsStore.reset();
+                this.user = null;
+                this.isAdmin = false;
+                router.push('/account/login');
+            }
+            catch(e) {
+                console.log('eeeee', e)
+            }
         }
     }
 });

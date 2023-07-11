@@ -71,7 +71,7 @@ async function onSubmit(values) {
                     <div class="invalid-feedback">{{ errors.password }}</div>
                 </div>
             </div>
-            <div class="form-row">
+            <div v-if="user.admin" class="form-row">
                 <div class="form-group col">
                     <label>Status</label>
                     <Field 
@@ -115,7 +115,7 @@ async function onSubmit(values) {
                     <div class="invalid-feedback">{{ errors.admin }}</div>
                 </div>
             </div>
-            <div class="form-row">
+            <div v-if="user.admin" class="form-row">
                 <div class="form-group col">
                     <label>Balance</label>
                     <Field name="balance" type="number" class="form-control" :class="{ 'is-invalid': errors.balance }" />
