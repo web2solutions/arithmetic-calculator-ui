@@ -5,7 +5,7 @@ import Chart from 'chart.js/auto'
 
 import { useAuthStore, useOperationsStore, useRecordsStore, useUsersStore } from '@/stores';
 
-const el = ref()
+// 
 
 
 
@@ -140,26 +140,33 @@ function buildChart4() {
 }
 
 onBeforeUnmount(() => {
-    chart1.destroy()
-    chart2.destroy()
-    chart3.destroy()
-    chart4.destroy()
+    try {
+        chart1.destroy()
+        chart2.destroy()
+        chart3.destroy()
+        chart4.destroy()
+    } catch (error) {
+        // console.log('error', error)
+    }
 });
 
 onMounted(() => {
     // el.value // <div>
         (async () => {
-            await operationsStore.getAll();
-            recordsStore.pageSize = 99999999; // max number or records
-            await recordsStore.getAll();
-            usersStore.pageSize = 99999999; // max number or records
-            await usersStore.getAll();
-            setTimeout(() => {
-                buildChart1();
-                buildChart2();
-                buildChart3();
-                buildChart4();
-            }, 500);
+            if(user.admin) {
+                await operationsStore.getAll();
+                recordsStore.pageSize = 99999999; // max number or records
+                await recordsStore.getAll();
+                usersStore.pageSize = 99999999; // max number or records
+                await usersStore.getAll();
+                setTimeout(() => {
+                    buildChart1();
+                    buildChart2();
+                    buildChart3();
+                    buildChart4();
+                }, 500);
+            }
+            
         })();
     })
     
@@ -181,21 +188,21 @@ onMounted(() => {
                     
                     <!-- <p><router-link v-if="user.admin" to="/create_operation">New Calcultator UI - POC only</router-link></p> -->
                 </div>
-                <div class="order-2 mr-2 border">
+                <div v-if="user.admin" class="order-2 mr-2 border">
                     <canvas id="myChart1" style="height: 30vh;"></canvas>
                 </div>
-                <div class="order-3 mr-2 border">
+                <div v-if="user.admin" class="order-3 mr-2 border">
                     <canvas id="myChart2" style="height: 30vh;"></canvas>
                 </div>
             </div>
             <div class="d-flex p-2 mb-2">
-                <div class="order-1 mr-2 border">
+                <div v-if="user.admin" class="order-1 mr-2 border">
                     <canvas id="myChart3" style="height: 30vh;"></canvas>
                 </div>
-                <div class="order-2 mr-2 border">
+                <div v-if="user.admin" class="order-2 mr-2 border">
                     <canvas id="myChart4" style="height: 15vh;"></canvas>
                 </div>
-                <div class="order-3 mr-2 border">
+                <div v-if="user.admin" class="order-3 mr-2 border">
                     <canvas id="myChart5" style="height: 25vh;"></canvas>
                 </div>
             </div>
