@@ -17,11 +17,14 @@
         "clean": "rm -rf ./dist",
         "preview": "vite preview --port 5050",
         "lint": "eslint . --ext .vue,.js --fix --ignore-path .gitignore",
-        "cypress:open": "CYPRESS_NODE_ENV=dev cypress open",
+        "cypress:open": "CYPRESS_NODE_ENV=dev npx cypress open",
         "cy:run": "cypress run  --browser chrome --spec \"cypress/e2e/*\"",
         "e2e": "CYPRESS_NODE_ENV=dev npx cypress run --browser chrome --spec \"cypress/e2e/*\"",
         "e2e:ci": "CYPRESS_NODE_ENV=ci npx cypress run --browser chrome --spec \"cypress/e2e/*\"",
-        "e2e:dev": "npm start & npx wait-on http://localhost:8080/ && npm run e2e"
+        "e2e:dev": "npm start & npx wait-on http://localhost:8080/ && npm run e2e",
+        "docker:compose": "docker compose -f \"docker-compose.yml\" up -d --build",
+        "docker:stop": "docker-compose stop",
+        "docker:restart": "docker compose -f \"docker-compose.yml\" down && npm run docker:compose"
     },
     "dependencies": {
         "@vercel/analytics": "^1.0.1",

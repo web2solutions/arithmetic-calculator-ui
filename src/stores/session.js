@@ -32,14 +32,11 @@ class Session {
         
         const localToken = this.getLocalToken();
         const userLstorage = localStorage.getItem('user');
-        console.log('userLstorage', userLstorage)
-        console.log('token', localToken)
         if (userLstorage && localToken !== '') {
             const user = JSON.parse(userLstorage);
             this._user = user;
             this.setPrivateHeaders(localToken);
         }
-        console.log('create session')
     }
 
     setLocalToken(token, exhours = 1) {
@@ -56,7 +53,6 @@ class Session {
             atts.push('secure');
             // atts.push('HttpOnly');
         }
-        console.log(atts.join(';'));
         document.cookie = atts.join(';'); // //  secure; HttpOnly
     }
 
@@ -67,7 +63,6 @@ class Session {
             `domain=${window.location.hostname}`,
             `path=/`,
         ];
-        console.log(atts.join(';'));
         document.cookie = atts.join(';'); // //  secure; HttpOnly
     }
 
