@@ -3,6 +3,9 @@ import { onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia';
 import Chart from 'chart.js/auto'
 
+// import { getSession } from '@/stores/session';
+// const session = getSession();
+
 import { useAuthStore, useOperationsStore, useRecordsStore, useUsersStore } from '@/stores';
 
 // 
@@ -154,17 +157,17 @@ onMounted(() => {
     // el.value // <div>
         if(user._object.isAdmin) {
             (async () => {
+                // const gresponse = await session.graphql('{ users, operations, records }');
+                // console.log(gresponse);
                 await operationsStore.getAll();
                 recordsStore.pageSize = 99999999; // max number or records
                 await recordsStore.getAll();
                 usersStore.pageSize = 99999999; // max number or records
                 await usersStore.getAll();
-                setTimeout(() => {
-                    buildChart1();
-                    buildChart2();
-                    buildChart3();
-                    buildChart4();
-                }, 500);
+                buildChart1();
+                buildChart2();
+                buildChart3();
+                buildChart4();
             })();
         }})
         
