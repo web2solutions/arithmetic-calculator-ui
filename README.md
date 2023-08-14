@@ -35,6 +35,9 @@ npm run dev
 
 <https://arithmetic-calculator-ui-nu.vercel.app/>
 
+user: admin@admin.com
+password: 123456
+
 ## Deploy
 
 Auto deploy with [Vercel](https://vercel.com/)
