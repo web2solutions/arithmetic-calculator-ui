@@ -47,14 +47,14 @@ async function onClickOpenSearch(e) {
             filter: {},
         };
         
-        if (username && username !== '') query.filter['username'] = username
+        if (username && username !== '') query.filter['user_id.username'] = username
         if (operation_id && operation_id !== '') query.filter['operation_id'] = operation_id;
 
         const safe = {
             filter: window.btoa(JSON.stringify({ ...query.filter })),
         };
         
-        router.push({ path: '/users', query: safe })
+        router.push({ path: '/records', query: safe })
     }
 }
 </script>

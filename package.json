@@ -10,7 +10,9 @@
         "dev": "vite",
         "test": "node e2e.local.js",
         "start": "npm run build && NODE_ENV=dev node server.js",
+        "start:bff": "npx vercel dev --listen 5000",
         "start:ci": "npm run build:ci && NODE_ENV=ci node server.js",
+        "start:bff:dev": "PORT=8080 vercel dev",
         "build": "npm run clean && NODE_ENV=production vite build --mode production",
         "build:dev": "npm run clean && NODE_ENV=dev vite build --mode production",
         "build:ci": "npm run clean && NODE_ENV=ci vite build --mode production",
@@ -29,6 +31,7 @@
     "dependencies": {
         "@vercel/analytics": "^1.0.1",
         "chart.js": "^4.3.0",
+        "graphql": "^16.7.1",
         "pinia": "^2.0.13",
         "sweetalert2": "^11.7.12",
         "vee-validate": "^4.5.11",
@@ -44,6 +47,7 @@
         "eslint": "^8.5.0",
         "eslint-plugin-vue": "^8.2.0",
         "express": "^4.18.2",
+        "vercel": "^31.1.0",
         "vite": "^2.9.16",
         "wait-on": "^7.0.1"
     },
